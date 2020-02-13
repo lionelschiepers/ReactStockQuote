@@ -19,7 +19,7 @@ function App() {
         >
           Learn React
         </a>
-        <dir><YahooFinance /></dir>
+        <div><YahooFinance /></div>
       </header>
     </div>
   );

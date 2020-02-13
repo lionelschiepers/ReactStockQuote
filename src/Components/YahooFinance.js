@@ -1,5 +1,16 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {Column, Table} from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+import underscore from 'underscore';
+
+// Table data as an array of objects
+const list = [
+    {name: 'Lionel', description: 'B'},
+    {name: 'Fabrice', description: 'E'},
+  {name: 'Xavier', description: 'T'},
+  // And so on...
+];
 
 const anyCorsHttp = axios.create(
   { baseURL:'https://cors-anywhere.herokuapp.com' }
@@ -16,8 +27,11 @@ class YahooFinance extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            yahooData : {}
+            yahooData : {},
+            list : list
         }
+
+        this._sort = this._sort.bind(this);
       }
 
       componentDidMount() {
@@ -28,6 +42,16 @@ class YahooFinance extends Component {
                     yahooData : json.data
                     })
                 });
+      }
+
+      _sort({sortBy, sortDirection}) {
+          const state = this.state;
+          const list = underscore.sortBy(state.list, p => p[sortBy]);
+          
+          this.setState({
+            yahooData : state.yahooData,
+            list: list
+            });
       }
     
     render() {
@@ -40,7 +64,19 @@ class YahooFinance extends Component {
             json = 'error';
         }
         return (
-            <div>Apple data:{json}</div>
+            <div><div>Apple data:{json}</div>
+            <div><Table
+    width={300}
+    height={300}
+    headerHeight={20}
+    rowHeight={30}
+    sort={this._sort}
+    rowCount={list.length}
+    rowGetter={({index}) => this.state.list[index]}>
+    <Column label="Name" dataKey="name" width={100} disableSort={false} />
+    <Column width={200} label="Description" dataKey="description" disableSort={false} />
+  </Table></div>
+            </div>
         );
     }
 }
