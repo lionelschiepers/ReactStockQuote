@@ -98,6 +98,7 @@ export const YahooFinanceFields = {
     */
   };
 
+
   
 export class YahooFinanceLoader
 { 
