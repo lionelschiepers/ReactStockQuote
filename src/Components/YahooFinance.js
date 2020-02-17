@@ -55,7 +55,7 @@ class YahooFinance extends Component {
 
         this._sort = this._sort.bind(this); 
 
-        YahooFinanceLoader loader = new YahooFinanceLoader();
+        let loader = new YahooFinanceLoader();
         loader.Load(['AAPL']);
       }
 
