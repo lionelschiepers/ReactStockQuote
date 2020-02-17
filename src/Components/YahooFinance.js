@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Column, Table} from 'react-virtualized';
+import {Column, Table, SortDirection} from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import underscore from 'underscore';
 
-// Table data as an array of objects
 const list = [
-    {name: 'Lionel', description: 'B'},
-    {name: 'Fabrice', description: 'E'},
   {name: 'Xavier', description: 'T'},
-  // And so on...
+  {name: 'Lionel', description: 'B'},
+  {name: 'Fabrice', description: 'E'},
 ];
 
 const anyCorsHttp = axios.create(
@@ -23,15 +21,42 @@ function getUrl(quote)
     return yahooFinanceUrl + '?symbols=' + quote;
 }
 
+class YahooFinanceLoader
+{
+  Load(symbols)
+  {
+    let result = [];
+    let chunks = underscore.chunks(symbols, 20);
+    chunks.forEach(chunk => 
+      {
+        anyCorsHttp
+            .get('/' + getUrl(chunk[0]))
+            .then(json => {
+                this.setState({
+                    yahooData : json.data
+                    })
+                });
+        result.push();
+      });
+
+  }
+}
+
 class YahooFinance extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            yahooData : {},
-            list : list
+          yahooData : {},
+          list : this._internalSort(list, 'name', SortDirection.ASC),
+          sortBy: 'name',
+          sortDirection: SortDirection.ASC,
         }
 
-        this._sort = this._sort.bind(this);
+        this._sort = this._sort.bind(this); 
+
+        YahooFinanceLoader loader = new YahooFinanceLoader();
+        loader.Load(['AAPL']);
       }
 
       componentDidMount() {
@@ -44,21 +69,34 @@ class YahooFinance extends Component {
                 });
       }
 
+      _internalSort(list, sortBy, sortDirection)
+      {
+        let orderedList = underscore.sortBy(list, p => p[sortBy]);
+        if (sortDirection === SortDirection.DESC)
+          orderedList = orderedList.reverse();
+
+          return orderedList;
+      }
+
       _sort({sortBy, sortDirection}) {
-          const state = this.state;
-          const list = underscore.sortBy(state.list, p => p[sortBy]);
-          
-          this.setState({
-            yahooData : state.yahooData,
-            list: list
-            });
+        const {
+            list
+          } = this.state;
+
+          let orderedList = this._internalSort(list, sortBy, sortDirection);
+          this.setState( {list: orderedList, sortBy:sortBy, sortDirection:sortDirection} );
       }
     
     render() {
-        const state = this.state;
+        const {
+            yahooData,
+            sortBy,
+            sortDirection,
+          } = this.state;
+
         let json = '';
         try {
-            json = JSON.stringify(state.yahooData.quoteResponse.result[0].regularMarketPrice);
+            json = JSON.stringify(yahooData.quoteResponse.result[0].regularMarketPrice);
 
         } catch(error) {
             json = 'error';
@@ -71,6 +109,8 @@ class YahooFinance extends Component {
     headerHeight={20}
     rowHeight={30}
     sort={this._sort}
+    sortBy={sortBy}
+    sortDirection={sortDirection}
     rowCount={list.length}
     rowGetter={({index}) => this.state.list[index]}>
     <Column label="Name" dataKey="name" width={100} disableSort={false} />
