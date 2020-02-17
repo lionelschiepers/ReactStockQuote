@@ -3,6 +3,7 @@ import {Column, Table, SortDirection} from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import _ from 'lodash';
 import {YahooFinanceLoader, YahooFinanceFields} from './YahooFinanceLoader';
+import { Portfolio } from './Portfolio';
 
 const list = [
   {name: 'Xavier', description: 'T'},
@@ -25,6 +26,9 @@ class YahooFinance extends Component {
 
         let loader = new YahooFinanceLoader();
         loader.Load(['AAPL', 'MSFT'], [YahooFinanceFields.RegularMarketPrice]);
+
+        let portfolio = new Portfolio();
+        portfolio.Load('https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv');
       }
 
       componentDidMount() {
