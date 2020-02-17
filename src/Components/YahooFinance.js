@@ -1,46 +1,14 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import {Column, Table, SortDirection} from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
-import underscore from 'underscore';
+import _ from 'lodash';
+import {YahooFinanceLoader, YahooFinanceFields} from './YahooFinanceLoader';
 
 const list = [
   {name: 'Xavier', description: 'T'},
   {name: 'Lionel', description: 'B'},
   {name: 'Fabrice', description: 'E'},
 ];
-
-const anyCorsHttp = axios.create(
-  { baseURL:'https://cors-anywhere.herokuapp.com' }
-);
-
-const yahooFinanceUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
-
-function getUrl(quote)
-{
-    return yahooFinanceUrl + '?symbols=' + quote;
-}
-
-class YahooFinanceLoader
-{
-  Load(symbols)
-  {
-    let result = [];
-    let chunks = underscore.chunks(symbols, 20);
-    chunks.forEach(chunk => 
-      {
-        anyCorsHttp
-            .get('/' + getUrl(chunk[0]))
-            .then(json => {
-                this.setState({
-                    yahooData : json.data
-                    })
-                });
-        result.push();
-      });
-
-  }
-}
 
 class YahooFinance extends Component {
     constructor(props) {
@@ -56,22 +24,20 @@ class YahooFinance extends Component {
         this._sort = this._sort.bind(this); 
 
         let loader = new YahooFinanceLoader();
-        loader.Load(['AAPL']);
+        loader.Load(['AAPL', 'MSFT'], [YahooFinanceFields.RegularMarketPrice]);
       }
 
       componentDidMount() {
-        anyCorsHttp
-            .get('/' + getUrl('AAPL'))
-            .then(json => {
-                this.setState({
-                    yahooData : json.data
-                    })
-                });
+        let loader = new YahooFinanceLoader();
+        loader
+          .Load(['AAPL'], [YahooFinanceFields.RegularMarketPrice])
+          .then(result => 
+            this.setState({yahooData : result}));
       }
 
       _internalSort(list, sortBy, sortDirection)
       {
-        let orderedList = underscore.sortBy(list, p => p[sortBy]);
+        let orderedList = _.sortBy(list, p => p[sortBy]);
         if (sortDirection === SortDirection.DESC)
           orderedList = orderedList.reverse();
 
@@ -96,7 +62,8 @@ class YahooFinance extends Component {
 
         let json = '';
         try {
-            json = JSON.stringify(yahooData.quoteResponse.result[0].regularMarketPrice);
+          if (_.isArray(yahooData))
+            json = JSON.stringify(yahooData[0].regularMarketPrice);
 
         } catch(error) {
             json = 'error';
