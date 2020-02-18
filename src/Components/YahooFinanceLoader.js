@@ -105,7 +105,7 @@ export class YahooFinanceLoader
   Load = async (symbols, fields) =>
   {
     let result = [];
-    let chunks = _.chunk(symbols, 20);
+    let chunks = _.chunk(symbols, 50);
     for (let i =0;i<chunks.length;i++)
     {
         let chunk = chunks[i];

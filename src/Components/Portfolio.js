@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import parser  from 'csv-parse/lib/sync';
 import axios from 'axios';
+import { GetRate } from './ExchangeRates';
+import{ YahooFinanceLoader, YahooFinanceFields } from './YahooFinanceLoader'
 
 class SecurityPostion
 {
@@ -12,11 +14,18 @@ class SecurityPostion
   Name;
   Transactions = [];
   PastGain = 0;
+  RateToEUR = 1;
+  Security; // price of one share
+
+  PriceInEur()
+  {
+    return this.NumberOfShares * this.Security.Price * this.RateToEUR; 
+  }
 }
 
 class CurrencyHelper
 {
-  static updateCurrency = (positions) =>
+  static async updateCurrency (positions)
   {
     _.forEach(positions, (position)=>
     {
@@ -31,10 +40,14 @@ class CurrencyHelper
       else 
         position.Currency = 'EUR';
     });
+
+    for (let i = 0; i<positions.length; i++)
+    {
+      if (positions[i].Currency !== 'EUR')
+        positions[i].RateToEUR = await GetRate(positions[i].Currency, 'EUR');
+    }
   }
 }
-
-
 
 export class Portfolio
 { 
@@ -44,7 +57,8 @@ export class Portfolio
      {
         
         const result = [];
-          axios
+
+          await axios
             .get(url)
             .then(res => {
                 const parsedCsv = parser(res.data, {columns:true});
@@ -96,15 +110,27 @@ export class Portfolio
                       
                 }
               });
+      });
 
-              CurrencyHelper.updateCurrency(result);
+      await CurrencyHelper.updateCurrency(result);
+
+      const tickers = result.map(o=> o.Ticker);
+
+      let loader = new YahooFinanceLoader();
+      for(let i = 0; i<result.length; i++)
+      {
+        let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice]);
+
+        result.map(o => {
+          o.Security = yahooData.find(y => y.Ticker === o.Ticker);
+        });
+      }
 
               let totalMarketCost = 0;
               let eurPositions = _.filter(result, (o) => o.Currency === "EUR");
 
               _.forEach(eurPositions, (o) => totalMarketCost+=o.MarketCost + o.PastGain);
               // let totalCurrentPrice = 0;
-      });
       
     }
 }
