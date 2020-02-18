@@ -21,8 +21,8 @@ const yahooFinanceUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
   }
 
 export const YahooFinanceFields = {
-    Ask : 'ask',
     /*
+    Ask : 'ask',
     AskSize,
     AverageDailyVolume10Day,
     AverageDailyVolume3Month,
@@ -87,7 +87,9 @@ export const YahooFinanceFields = {
     SharesOutstanding,
     ShortName,
     SourceInterval,
+    */
     Symbol,
+    /*
     Tradeable,
     TrailingAnnualDividendRate,
     TrailingAnnualDividendYield,
@@ -98,13 +100,33 @@ export const YahooFinanceFields = {
     */
   };
 
-
-  
 export class YahooFinanceLoader
 { 
-  Load = async (symbols, fields) =>
+  async Load(symbols, fields)
   {
+    let now = Date.now();
+    
     let result = [];
+
+    for(let i = symbols.length - 1; i >= 0; i--)
+    {
+      let symbol = symbols[i];
+      let cacheItem = localStorage.getItem(symbol);
+      if (cacheItem != null)
+      {
+        cacheItem = JSON.parse(cacheItem);
+        if ((now - cacheItem.Date) < 1000 * 60 * 5) // 5 minutes
+        {
+          result.push(cacheItem);
+          symbols.splice(i, 1);
+        }
+        else
+        {
+          localStorage.removeItem(symbol);
+        }
+      }
+    }
+
     let chunks = _.chunk(symbols, 50);
     for (let i =0;i<chunks.length;i++)
     {
@@ -113,7 +135,14 @@ export class YahooFinanceLoader
             .get('/' + getUrl(chunk, fields))
             .then(json => json.data.quoteResponse.result);
         
-        result.push(...chunkData);
+        chunkData.forEach(o =>
+        {
+          o.Date = now;
+          localStorage.setItem(o.symbol, JSON.stringify(o));
+          result.push(o);
+        });
+
+        // result.push(...chunkData);
     }
 
     return result;

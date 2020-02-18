@@ -31,7 +31,7 @@ export async function GetRate(from, to)
 
                         if (currency === 'GBP')
                         {
-                            result.push({ currency:'GBp', rate:0.001*parseFloat(rate)});
+                            result.push({ currency:'GBp', rate:1000.0 * parseFloat(rate)});
 
                         }
                     }
@@ -51,8 +51,9 @@ export async function GetRate(from, to)
     let toRate = Cache.Rates.find(o =>o.currency === to);
     if (toRate == null)
         throw new Error ('Failed to retrieve a rate for ' + toRate);
+
     
-    let rate = 1 / (fromRate.rate * toRate.rate);
+    let rate = (1/fromRate.rate) * toRate.rate;
     return rate;
 } 
 

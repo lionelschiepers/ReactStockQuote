@@ -15,6 +15,8 @@ class SecurityPostion
   Transactions = [];
   PastGain = 0;
   RateToEUR = 1;
+  MarketPrice;
+  MarketPriceEUR;
   Security; // price of one share
 
   PriceInEur()
@@ -117,14 +119,27 @@ export class Portfolio
       const tickers = result.map(o=> o.Ticker);
 
       let loader = new YahooFinanceLoader();
-      for(let i = 0; i<result.length; i++)
-      {
-        let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice]);
+      let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice]);
+      result.forEach(o => o.Security = yahooData.find(y => y.symbol === o.Ticker));
 
-        result.map(o => {
-          o.Security = yahooData.find(y => y.Ticker === o.Ticker);
+      result.forEach(position =>
+        {
+          if (position.Security == null)
+            return;
+          if (position.Security.regularMarketPrice == null)
+            return;
+
+          position.MarketPrice = position.Security.regularMarketPrice * position.NumberOfShares;
+          position.MarketPriceEUR = position.RateToEUR * position.MarketPrice
         });
-      }
+
+        let totalMarketPrice = 0;
+        result
+        .filter(o=>o.MarketPriceEUR != null)
+        .forEach(o => 
+          {
+            totalMarketPrice += o.MarketPriceEUR
+          });
 
               let totalMarketCost = 0;
               let eurPositions = _.filter(result, (o) => o.Currency === "EUR");
