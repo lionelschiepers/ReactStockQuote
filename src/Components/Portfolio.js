@@ -83,7 +83,7 @@ export class Portfolio
                       item.PastGain += x * data.Price;
                       
 
-                      if (lastTransaction.Shares == 0)
+                      if (lastTransaction.Shares === 0)
                         item.Transactions.pop();
                     }
                     break;
@@ -100,10 +100,10 @@ export class Portfolio
               CurrencyHelper.updateCurrency(result);
 
               let totalMarketCost = 0;
-              let eurPositions = _.filter(result, (o) => o.Currency == "EUR");
+              let eurPositions = _.filter(result, (o) => o.Currency === "EUR");
 
               _.forEach(eurPositions, (o) => totalMarketCost+=o.MarketCost + o.PastGain);
-              let totalCurrentPrice = 0;
+              // let totalCurrentPrice = 0;
       });
       
     }
