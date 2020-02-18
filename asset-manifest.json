@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/ReactStockQuote/static/css/main.8ab6f918.chunk.css",
+    "main.js": "/ReactStockQuote/static/js/main.d49b0c3f.chunk.js",
+    "main.js.map": "/ReactStockQuote/static/js/main.d49b0c3f.chunk.js.map",
+    "runtime-main.js": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js",
+    "runtime-main.js.map": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js.map",
+    "static/css/2.71916e70.chunk.css": "/ReactStockQuote/static/css/2.71916e70.chunk.css",
+    "static/js/2.6b3df577.chunk.js": "/ReactStockQuote/static/js/2.6b3df577.chunk.js",
+    "static/js/2.6b3df577.chunk.js.map": "/ReactStockQuote/static/js/2.6b3df577.chunk.js.map",
+    "index.html": "/ReactStockQuote/index.html",
+    "precache-manifest.3b2175fdee3a63d56d99ec65d2755184.js": "/ReactStockQuote/precache-manifest.3b2175fdee3a63d56d99ec65d2755184.js",
+    "service-worker.js": "/ReactStockQuote/service-worker.js",
+    "static/css/2.71916e70.chunk.css.map": "/ReactStockQuote/static/css/2.71916e70.chunk.css.map",
+    "static/css/main.8ab6f918.chunk.css.map": "/ReactStockQuote/static/css/main.8ab6f918.chunk.css.map",
+    "static/js/2.6b3df577.chunk.js.LICENSE.txt": "/ReactStockQuote/static/js/2.6b3df577.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/ReactStockQuote/static/media/logo.ee7cd8ed.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c4d13ba9.js",
+    "static/css/2.71916e70.chunk.css",
+    "static/js/2.6b3df577.chunk.js",
+    "static/css/main.8ab6f918.chunk.css",
+    "static/js/main.d49b0c3f.chunk.js"
+  ]
+}
