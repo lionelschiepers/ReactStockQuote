@@ -53,7 +53,8 @@ export class Portfolio
 { 
     // Loads the specified transactions
     // sample file: https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv
-    Load = async(url) => {
+    async Load (url) 
+     {
         
         const result = [];
 
