@@ -94,6 +94,7 @@ export class Portfolio
                       let lastTransaction = _.last(item.Transactions);
                       let x = Math.min(lastTransaction.Shares, data.Shares);
                       item.MarketCost -= x * lastTransaction.Price;
+                      item.NumberOfShares -= x;
                       lastTransaction.Shares -= x;
                       data.Shares -= x;
                       item.PastGain += x * data.Price;
@@ -133,6 +134,7 @@ export class Portfolio
           position.MarketPriceEUR = position.RateToEUR * position.MarketPrice
         });
 
+        /*
         let totalMarketPrice = 0;
         result
         .filter(o=>o.MarketPriceEUR != null)
@@ -146,6 +148,8 @@ export class Portfolio
 
               _.forEach(eurPositions, (o) => totalMarketCost+=o.MarketCost + o.PastGain);
               // let totalCurrentPrice = 0;
+*/
+              return result;
       
     }
 }

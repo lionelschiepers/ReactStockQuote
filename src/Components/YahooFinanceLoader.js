@@ -141,8 +141,6 @@ export class YahooFinanceLoader
           localStorage.setItem(o.symbol, JSON.stringify(o));
           result.push(o);
         });
-
-        // result.push(...chunkData);
     }
 
     return result;
