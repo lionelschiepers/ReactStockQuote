@@ -50,7 +50,22 @@ class YahooFinance extends Component {
 
       _internalSort(list, sortBy, sortDirection)
       {
-        let orderedList = _.sortBy(list, p => p[sortBy]);
+        let orderedList = _.sortBy(list, p => 
+          {
+            if (sortBy === 'Diff')
+            {
+              let diff = p.getPriceDiff();
+              if (p.NumberOfShares === 0)
+                diff = null;
+                
+              if (diff == null && sortDirection === SortDirection.DESC)
+                diff = -100000000; // always at the bottom
+
+              return diff;
+            }
+
+            return p[sortBy]
+          });
         if (sortDirection === SortDirection.DESC)
           orderedList = orderedList.reverse();
 
@@ -76,20 +91,32 @@ class YahooFinance extends Component {
         rowIndex
       })
       {
-        /*
-        if (dataKey === 'Security.regularMarketPrice')
+        let postData = '';
+        
+        if (dataKey === 'Security.regularMarketPrice' && rowData.Security != null)
         {
-          return (<div>{rowData.Security == null || rowData.Security.regularMarketPrice == null ? '': rowData.Security.regularMarketPrice.toFixed(2)} {rowData.Currency}</div>);
+          if (cellData != null)
+            postData = rowData.Currency;
         }
-        */
-
-        if (dataKey === 'NumberOfShares')
+        
+          if (dataKey === 'NumberOfShares')
           return (<div>{cellData == null ? '': cellData.toFixed(0)}</div>);
 
-        let postData = '';
-        if (dataKey === 'Security.regularMarketPrice' && cellData != null)
-          postData = rowData.Currency;
-        
+          if (dataKey === 'Diff')
+          {
+            let price = rowData.Security == null ? null : rowData.Security.regularMarketPrice;
+            let previousPrice = rowData.Security == null ? null : rowData.Security.regularMarketPreviousClose;
+            if (price == null || previousPrice == null)
+              return(<div />);
+            
+            cellData =  100.0 * ((price / previousPrice) - 1.0);
+            postData = '%';
+          }
+
+          if (dataKey === 'MarketCost' || dataKey === 'MarketPrice')
+            if (cellData === 0)
+              cellData = null;
+
         return (<div>{cellData == null ? '': cellData.toFixed(2)} {postData}</div>);
       }
     
@@ -101,19 +128,8 @@ class YahooFinance extends Component {
             sortDirection,
           } = this.state;
 
-          /*
-        let json = '';
-        try {
-          if (_.isArray(portfolio))
-            json = JSON.stringify(yahooData[0].regularMarketPrice);
-
-        } catch(error) {
-            json = 'error';
-        }
-         */
         return (
 <div>
-   <div>Apple data:{/*json*/}</div>
   <div>
   <AutoSizer>
     {({height, width}) => (
@@ -129,10 +145,11 @@ class YahooFinance extends Component {
       rowGetter={({index}) => this.state.portfolio[index]}>
         <Column align={'left'} width={300} label="Name" dataKey="Name" disableSort={false} />
         <Column width={100} label="Price" dataKey="Security.regularMarketPrice" disableSort={false} cellDataGetter={({rowData}) => rowData.Security == null ? null : rowData.Security.regularMarketPrice} cellRenderer={this.renderPrice} />
+        <Column width={100} label="Diff" dataKey="Diff" disableSort={false} cellDataGetter={({rowData}) => rowData.getPriceDiff()} cellRenderer={this.renderPrice} />
         <Column width={100} label="Shares" dataKey="NumberOfShares" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Cost" dataKey="MarketCost" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Price" dataKey="MarketPrice" disableSort={false} cellRenderer={this.renderPrice} />
-        <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.MarketPrice - rowData.MarketCost} cellRenderer={this.renderPrice} />
+        <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain()} cellRenderer={this.renderPrice} />
         <Column width={150} label="Past Gain" dataKey="PastGain" disableSort={false} cellRenderer={this.renderPrice} />
     </Table>
     )}

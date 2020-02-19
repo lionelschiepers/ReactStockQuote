@@ -10,18 +10,38 @@ class SecurityPostion
   Market;
   NumberOfShares = 0;
   MarketCost = 0;
+  MarketPrice;
+  MarketPriceEUR;
   Currency;
   Name;
   Transactions = [];
   PastGain = 0;
   RateToEUR = 1;
-  MarketPrice;
-  MarketPriceEUR;
   Security; // price of one share
 
   PriceInEur()
   {
     return this.NumberOfShares * this.Security.Price * this.RateToEUR; 
+  }
+
+  getGain()
+  {
+    if (this.MarketPrice == null || this.MarketCost == null)
+      return null;
+    if (this.NumberOfShares === 0)
+      return null;
+
+    return this.MarketPrice - this.MarketCost;
+  }
+
+  getPriceDiff()
+  {
+    let price = this.Security == null ? null : this.Security.regularMarketPrice;
+    let previousPrice = this.Security == null ? null : this.Security.regularMarketPreviousClose;
+    if (price == null || previousPrice == null)
+      return null;
+        
+    return 100.0 * ((price / previousPrice) - 1.0);
   }
 }
 
@@ -67,7 +87,7 @@ export class Portfolio
 
                 _.forEach(parsedCsv, (data)=>
             {
-              data.Shares = parseFloat(data.Shares);
+              data.Shares = Math.abs(parseFloat(data.Shares));
               data.Price = parseFloat(data.Price);
               data.Commission = parseFloat(data.Commission);
               
@@ -82,23 +102,25 @@ export class Portfolio
                 switch(data.Type.toLowerCase())
                 {
                   case 'buy':
-                    item.NumberOfShares += parseFloat(data.Shares);
-                    item.MarketCost +=  Math.abs(parseFloat(data.Shares)) * parseFloat(data.Price);
-                    item.MarketCost += parseFloat(data.Commission);
+                    item.NumberOfShares += data.Shares;
+                    item.MarketCost +=  data.Shares * data.Price + data.Commission;
                     item.Transactions.push(data);
                     break;
                   case 'sell':
                     // calculate the past gain with the last transactions.
+
+                    if (data.symbol === 'PUM.DE')
+                      console.log('');
+
                     while(data.Shares > 0)
                     {
                       let lastTransaction = _.last(item.Transactions);
                       let x = Math.min(lastTransaction.Shares, data.Shares);
-                      item.MarketCost -= x * lastTransaction.Price;
+                      item.MarketCost -= x * lastTransaction.Price + lastTransaction.Commission;
                       item.NumberOfShares -= x;
                       lastTransaction.Shares -= x;
                       data.Shares -= x;
-                      item.PastGain += x * data.Price;
-                      
+                      item.PastGain += x * (data.Price - lastTransaction.Price);
 
                       if (lastTransaction.Shares === 0)
                         item.Transactions.pop();
@@ -120,7 +142,7 @@ export class Portfolio
       const tickers = result.map(o=> o.Ticker);
 
       let loader = new YahooFinanceLoader();
-      let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice]);
+      let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice, YahooFinanceFields.RegularMarketPreviousClose]);
       result.forEach(o => o.Security = yahooData.find(y => y.symbol === o.Ticker));
 
       result.forEach(position =>
