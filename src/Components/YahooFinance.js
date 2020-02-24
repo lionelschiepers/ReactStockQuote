@@ -2,46 +2,24 @@ import React, {Component} from 'react';
 import {Column, Table, SortDirection, AutoSizer} from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 import _ from 'lodash';
-// import {YahooFinanceLoader, YahooFinanceFields} from './YahooFinanceLoader';
 import { Portfolio } from './Portfolio';
+import './YahooFinance.css';
 
-/*
-const list = [
-  {name: 'Xavier', description: 'T'},
-  {name: 'Lionel', description: 'B'},
-  {name: 'Fabrice', description: 'E'},
-];
-*/
 
 class YahooFinance extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-          // yahooData : {},
-          portfolio : [], //this._internalSort(list, 'name', SortDirection.ASC),
+          portfolio : [],
           sortBy: 'Name',
           sortDirection: SortDirection.ASC,
         }
 
         this._sort = this._sort.bind(this); 
-        // this.renderPrice = this.renderPrice.bind(this);
-
-        // let loader = new YahooFinanceLoader();
-        // loader.Load(['AAPL', 'MSFT'], [YahooFinanceFields.RegularMarketPrice]);
-
-        // let portfolio = new Portfolio();
-        // portfolio.Load('https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv');
       }
 
       componentDidMount() {
-        /*
-        let loader = new YahooFinanceLoader();
-        loader
-          .Load(['AAPL'], [YahooFinanceFields.RegularMarketPrice])
-          .then(result => 
-            this.setState({yahooData : result}));
-*/
         let portfolioBuilder = new Portfolio();
         portfolioBuilder
           .Load('https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv')
@@ -66,6 +44,7 @@ class YahooFinance extends Component {
 
             return p[sortBy]
           });
+
         if (sortDirection === SortDirection.DESC)
           orderedList = orderedList.reverse();
 
@@ -119,11 +98,23 @@ class YahooFinance extends Component {
 
         return (<div>{cellData == null ? '': cellData.toFixed(2)} {postData}</div>);
       }
+
+      renderName({
+        cellData,
+        columnData,
+        columnIndex,
+        dataKey,
+        isScrolling,
+        rowData,
+        rowIndex
+      })
+      {
+        return (<a className='stockName' target='_blank' rel="noopener noreferrer" href={'https://finance.yahoo.com/quote/' +rowData.Ticker}>{rowData.Name}</a>);
+      }
     
     render() {
         const {
             portfolio,
-            // yahooData,
             sortBy,
             sortDirection,
           } = this.state;
@@ -141,9 +132,9 @@ class YahooFinance extends Component {
       sort={this._sort}
       sortBy={sortBy}
       sortDirection={sortDirection}
-      rowCount={this.state.portfolio.length}
-      rowGetter={({index}) => this.state.portfolio[index]}>
-        <Column align={'left'} width={300} label="Name" dataKey="Name" disableSort={false} />
+      rowCount={portfolio.length}
+      rowGetter={({index}) => portfolio[index]}>
+        <Column className='stockName' width={300} label="Name" dataKey="Name" disableSort={false} cellRenderer={this.renderName}/>
         <Column width={100} label="Price" dataKey="Security.regularMarketPrice" disableSort={false} cellDataGetter={({rowData}) => rowData.Security == null ? null : rowData.Security.regularMarketPrice} cellRenderer={this.renderPrice} />
         <Column width={100} label="Diff" dataKey="Diff" disableSort={false} cellDataGetter={({rowData}) => rowData.getPriceDiff()} cellRenderer={this.renderPrice} />
         <Column width={100} label="Shares" dataKey="NumberOfShares" disableSort={false} cellRenderer={this.renderPrice} />
