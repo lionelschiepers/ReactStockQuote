@@ -31,7 +31,7 @@ export async function GetRate(from, to)
 
                         if (currency === 'GBP')
                         {
-                            result.push({ currency:'GBp', rate:1000.0 * parseFloat(rate)});
+                            result.push({ currency:'GBp', rate:100.0 * parseFloat(rate)});
 
                         }
                     }
