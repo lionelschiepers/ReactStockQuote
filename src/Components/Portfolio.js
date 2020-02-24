@@ -10,12 +10,14 @@ class SecurityPostion
   Market;
   NumberOfShares = 0;
   MarketCost = 0;
-  MarketPrice;
-  MarketPriceEUR;
+  MarketCostEUR = 0;
+  MarketPrice = 0;
+  MarketPriceEUR = 0;
   Currency;
   Name;
   Transactions = [];
   PastGain = 0;
+  PastGainEUR = 0;
   RateToEUR = 1;
   Security; // price of one share
 
@@ -24,13 +26,16 @@ class SecurityPostion
     return this.NumberOfShares * this.Security.Price * this.RateToEUR; 
   }
 
-  getGain()
+  getGain(inEur = false)
   {
     if (this.MarketPrice == null || this.MarketCost == null)
       return null;
     if (this.NumberOfShares === 0)
       return null;
 
+      if (inEur)
+      return this.MarketPriceEUR - this.MarketCostEUR;
+      
     return this.MarketPrice - this.MarketCost;
   }
 
@@ -139,7 +144,7 @@ export class Portfolio
 
       await CurrencyHelper.updateCurrency(result);
 
-      const tickers = result.map(o=> o.Ticker);
+      const tickers = result.filter(o=>o.NumberOfShares > 0).map(o=> o.Ticker);
 
       let loader = new YahooFinanceLoader();
       let yahooData = await loader.Load(tickers, [YahooFinanceFields.RegularMarketPrice, YahooFinanceFields.RegularMarketPreviousClose]);
@@ -147,13 +152,16 @@ export class Portfolio
 
       result.forEach(position =>
         {
+          position.MarketCostEUR  = position.RateToEUR * position.MarketCost;
+          position.PastGainEUR  = position.RateToEUR * position.PastGain;
+
           if (position.Security == null)
             return;
           if (position.Security.regularMarketPrice == null)
             return;
 
           position.MarketPrice = position.Security.regularMarketPrice * position.NumberOfShares;
-          position.MarketPriceEUR = position.RateToEUR * position.MarketPrice
+          position.MarketPriceEUR = position.RateToEUR * position.MarketPrice;          
         });
 
         /*

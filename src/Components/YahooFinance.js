@@ -12,18 +12,50 @@ class YahooFinance extends Component {
 
         this.state = {
           portfolio : [],
+          marketCost : 0,
+          marketPrice : 0,
+          pastGain : 0,
+          gain : 0,
+          dividendYield : 0,
           sortBy: 'Name',
           sortDirection: SortDirection.ASC,
+          displayInEUR : false,
         }
 
         this._sort = this._sort.bind(this); 
+        this.handleCheck = this.handleCheck.bind(this);
+        this.renderPrice = this.renderPrice.bind(this);
       }
 
       componentDidMount() {
         let portfolioBuilder = new Portfolio();
         portfolioBuilder
           .Load('https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv')
-          .then(portfolio => this.setState({portfolio:portfolio}) );
+          .then(portfolio => 
+            {
+              this.setState({portfolio:portfolio})
+              
+              let marketCost = 0;
+              let marketPrice = 0;
+              let pastGain = 0;
+              portfolio
+                .forEach(position =>
+                {
+                  pastGain += position.PastGainEUR;
+
+                  if (Number.isNaN(position.MarketCostEUR))
+                    return;
+                  if (Number.isNaN(position.MarketPriceEUR))
+                    return;
+                  
+                  marketCost += position.MarketCostEUR;
+                  marketPrice+= position.MarketPriceEUR;
+                });
+
+                let gain = marketCost == 0 ? 0 : marketPrice/marketCost - 1.0;
+
+                this.setState({marketCost:marketCost, marketPrice:marketPrice, gain:gain, pastGain:pastGain});
+            });
       }
 
       _internalSort(list, sortBy, sortDirection)
@@ -95,11 +127,17 @@ class YahooFinance extends Component {
             postData = '%';
           }
 
-          if (dataKey === 'MarketCost' || dataKey === 'MarketPrice')
-            if (cellData === 0)
-              cellData = null;
+          if (dataKey === 'MarketCost' && this.state.displayInEUR)
+            cellData = rowData.MarketCostEUR;
+            if (dataKey === 'MarketPrice' && this.state.displayInEUR)
+            cellData = rowData.MarketPriceEUR;
+            if (dataKey === 'PastGain' && this.state.displayInEUR)
+            cellData = rowData.PastGainEUR;
 
-        return (<div>{cellData == null ? '': cellData.toFixed(2)} {postData}</div>);
+          if ((dataKey === 'MarketCost' || dataKey === 'MarketPrice') && cellData === 0)
+            cellData = null;
+
+          return (<div>{cellData == null ? '': cellData.toFixed(2)} {postData}</div>);
       }
 
       renderName({
@@ -115,6 +153,12 @@ class YahooFinance extends Component {
         return (<a className='stockName' target='_blank' rel="noopener noreferrer" href={'https://finance.yahoo.com/quote/' +rowData.Ticker}>{rowData.Name}</a>);
       }
     
+      handleCheck()
+      {
+        this.setState({displayInEUR:!this.state.displayInEUR});
+        this.forceUpdate();
+      }
+
     render() {
         const {
             portfolio,
@@ -124,6 +168,21 @@ class YahooFinance extends Component {
 
         return (
 <div>
+  <div style={{textAlign:'left'}}>
+    Market Price:{this.state.marketPrice.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    <br/>
+    Market Cost:{this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    <br/>
+    Gain:{(this.state.gain * 100.0).toFixed(2)}%
+    <br/>
+    Past Gain:{this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    <br/>
+    Dividend Yield:{this.state.dividendYield.toFixed(2)}
+    <br/><br />
+  </div>
+  <div style={{textAlign:'left'}}>
+		<input type="checkbox" onChange={this.handleCheck} defaultChecked={this.state.displayInEUR}/> Display in EUR
+	</div>
   <div>
   <AutoSizer>
     {({height, width}) => (
@@ -132,6 +191,12 @@ class YahooFinance extends Component {
       height={1000}
       headerHeight={20}
       rowHeight={30}
+      rowClassName={({ index }) => {
+        if(index !== -1 && index %2 ===0) {
+          return "evenRow"
+        } else if(index!==-1 && index%2===1) {
+          return "oddRow"
+        }}}
       sort={this._sort}
       sortBy={sortBy}
       sortDirection={sortDirection}
@@ -143,7 +208,7 @@ class YahooFinance extends Component {
         <Column width={100} label="Shares" dataKey="NumberOfShares" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Cost" dataKey="MarketCost" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Price" dataKey="MarketPrice" disableSort={false} cellRenderer={this.renderPrice} />
-        <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain()} cellRenderer={this.renderPrice} />
+        <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain(this.state.displayInEUR)} cellRenderer={this.renderPrice} />
         <Column width={150} label="Past Gain" dataKey="PastGain" disableSort={false} cellRenderer={this.renderPrice} />
     </Table>
     )}

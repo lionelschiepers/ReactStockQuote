@@ -17,3 +17,13 @@ a.stockName:hover
     color:red;
     font-weight: bold;
 }
+
+.oddRow
+{
+    background-color: whitesmoke;
+}
+
+.evenRow
+{
+    background-color: white;
+}
