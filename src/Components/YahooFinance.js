@@ -42,6 +42,9 @@ class YahooFinance extends Component {
               return diff;
             }
 
+            if (_.isString(p[sortBy]))
+              return p[sortBy].toLowerCase(); // case insensitive sort.
+              
             return p[sortBy]
           });
 
