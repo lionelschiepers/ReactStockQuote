@@ -1,0 +1,29 @@
+div.stockName { 
+    text-align: left;
+  }
+
+a.stockName:link
+{
+    color:blue;
+}
+
+a.stockName:visited
+{
+    color:blue;
+}
+
+a.stockName:hover
+{
+    color:red;
+    font-weight: bold;
+}
+
+.oddRow
+{
+    background-color: whitesmoke;
+}
+
+.evenRow
+{
+    background-color: white;
+}
