@@ -52,7 +52,7 @@ class YahooFinance extends Component {
                   marketPrice+= position.MarketPriceEUR;
                 });
 
-                let gain = marketCost == 0 ? 0 : marketPrice/marketCost - 1.0;
+                let gain = marketCost === 0 ? 0 : marketPrice/marketCost - 1.0;
 
                 this.setState({marketCost:marketCost, marketPrice:marketPrice, gain:gain, pastGain:pastGain});
             });
