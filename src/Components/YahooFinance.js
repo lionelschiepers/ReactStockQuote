@@ -16,6 +16,7 @@ class YahooFinance extends Component {
           marketPrice : 0,
           pastGain : 0,
           gain : 0,
+          dayDiff : 0,
           dividendYield : 0,
           sortBy: 'Name',
           sortDirection: SortDirection.ASC,
@@ -53,8 +54,15 @@ class YahooFinance extends Component {
                 });
 
                 let gain = marketCost === 0 ? 0 : marketPrice/marketCost - 1.0;
+                let dayDiff = new Portfolio().getDayDiff(portfolio);
 
-                this.setState({marketCost:marketCost, marketPrice:marketPrice, gain:gain, pastGain:pastGain});
+                this.setState({
+                  marketCost:marketCost, 
+                  marketPrice:marketPrice, 
+                  gain:gain, 
+                  pastGain:pastGain,
+                  dayDiff:dayDiff
+                });
             });
       }
 
@@ -64,7 +72,7 @@ class YahooFinance extends Component {
           {
             if (sortBy === 'Diff')
             {
-              let diff = p.getPriceDiff();
+              let diff = p.getDayDiff();
               if (p.NumberOfShares === 0)
                 diff = null;
                 
@@ -173,7 +181,9 @@ class YahooFinance extends Component {
     <br/>
     Market Cost:{this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
-    Gain:{(this.state.gain * 100.0).toFixed(2)}%
+    Total Gain:{(this.state.gain * 100.0).toFixed(2)}%
+    <br/>
+    Day diff:{(this.state.dayDiff * 100.0).toFixed(2)}%
     <br/>
     Past Gain:{this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
@@ -204,7 +214,7 @@ class YahooFinance extends Component {
       rowGetter={({index}) => portfolio[index]}>
         <Column className='stockName' width={300} label="Name" dataKey="Name" disableSort={false} cellRenderer={this.renderName}/>
         <Column width={100} label="Price" dataKey="Security.regularMarketPrice" disableSort={false} cellDataGetter={({rowData}) => rowData.Security == null ? null : rowData.Security.regularMarketPrice} cellRenderer={this.renderPrice} />
-        <Column width={100} label="Diff" dataKey="Diff" disableSort={false} cellDataGetter={({rowData}) => rowData.getPriceDiff()} cellRenderer={this.renderPrice} />
+        <Column width={100} label="Diff" dataKey="Diff" disableSort={false} cellDataGetter={({rowData}) => rowData.getDayDiff()} cellRenderer={this.renderPrice} />
         <Column width={100} label="Shares" dataKey="NumberOfShares" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Cost" dataKey="MarketCost" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Price" dataKey="MarketPrice" disableSort={false} cellRenderer={this.renderPrice} />
