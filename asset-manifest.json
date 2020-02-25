@@ -1,26 +1,25 @@
 {
   "files": {
-    "main.css": "/ReactStockQuote/static/css/main.8ab6f918.chunk.css",
-    "main.js": "/ReactStockQuote/static/js/main.ec397c01.chunk.js",
-    "main.js.map": "/ReactStockQuote/static/js/main.ec397c01.chunk.js.map",
+    "main.css": "/ReactStockQuote/static/css/main.b1990d10.chunk.css",
+    "main.js": "/ReactStockQuote/static/js/main.eadb4b80.chunk.js",
+    "main.js.map": "/ReactStockQuote/static/js/main.eadb4b80.chunk.js.map",
     "runtime-main.js": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js",
     "runtime-main.js.map": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js.map",
     "static/css/2.71916e70.chunk.css": "/ReactStockQuote/static/css/2.71916e70.chunk.css",
-    "static/js/2.e0f1a948.chunk.js": "/ReactStockQuote/static/js/2.e0f1a948.chunk.js",
-    "static/js/2.e0f1a948.chunk.js.map": "/ReactStockQuote/static/js/2.e0f1a948.chunk.js.map",
+    "static/js/2.36123933.chunk.js": "/ReactStockQuote/static/js/2.36123933.chunk.js",
+    "static/js/2.36123933.chunk.js.map": "/ReactStockQuote/static/js/2.36123933.chunk.js.map",
     "index.html": "/ReactStockQuote/index.html",
-    "precache-manifest.b0e593a27e0b85a2e81ca966fe9a7149.js": "/ReactStockQuote/precache-manifest.b0e593a27e0b85a2e81ca966fe9a7149.js",
+    "precache-manifest.1c2ea04e59cb71f56a357e1cf88c43e0.js": "/ReactStockQuote/precache-manifest.1c2ea04e59cb71f56a357e1cf88c43e0.js",
     "service-worker.js": "/ReactStockQuote/service-worker.js",
     "static/css/2.71916e70.chunk.css.map": "/ReactStockQuote/static/css/2.71916e70.chunk.css.map",
-    "static/css/main.8ab6f918.chunk.css.map": "/ReactStockQuote/static/css/main.8ab6f918.chunk.css.map",
-    "static/js/2.e0f1a948.chunk.js.LICENSE.txt": "/ReactStockQuote/static/js/2.e0f1a948.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/ReactStockQuote/static/media/logo.ee7cd8ed.svg"
+    "static/css/main.b1990d10.chunk.css.map": "/ReactStockQuote/static/css/main.b1990d10.chunk.css.map",
+    "static/js/2.36123933.chunk.js.LICENSE.txt": "/ReactStockQuote/static/js/2.36123933.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c4d13ba9.js",
     "static/css/2.71916e70.chunk.css",
-    "static/js/2.e0f1a948.chunk.js",
-    "static/css/main.8ab6f918.chunk.css",
-    "static/js/main.ec397c01.chunk.js"
+    "static/js/2.36123933.chunk.js",
+    "static/css/main.b1990d10.chunk.css",
+    "static/js/main.eadb4b80.chunk.js"
   ]
 }
