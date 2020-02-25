@@ -20,6 +20,47 @@ class SecurityPostion
   PastGainEUR = 0;
   RateToEUR = 1;
   Security; // price of one share
+
+  getTaxeRate()
+	{
+    if (this.Ticker.indexOf('.') < 0)
+      return 0.85 * 0.7;
+    else if (this.Ticker.endsWith(".BR"))
+      return 0.7;
+    else if (this.Ticker.endsWith(".VX"))
+      return 0.65 * 0.7;
+    else if (this.Ticker.endsWith(".ST"))
+      return 0.7 * 0.7;
+    else if (this.Ticker.endsWith(".DE"))
+      return 0.7362 * 0.7;
+    else if (this.Ticker.endsWith(".CA"))
+      return 0.75 * 0.7;
+    else if (this.Ticker.endsWith(".HE"))
+      return 0.8 * 0.7;
+    else if (this.Ticker.endsWith(".LU"))
+      return 0.85 * 0.7;
+    else if (this.Ticker.endsWith(".AS"))
+      return 0.85 * 0.7;
+    else if (this.Ticker.endsWith(".PA"))
+      return 0.872 * 0.7;
+    else if (this.Ticker.endsWith(".L"))
+      return 0.7;
+    else 
+      return 0.7; // at least belgian taxes
+  }
+    
+  getDividendYield(inEur = false)
+  {
+    let dividend = this.Security == null ? 0.0 : this.Security.trailingAnnualDividendRate;
+    dividend *= this.NumberOfShares;
+
+    if (Number.isNaN(dividend))
+      return 0.0;
+
+    dividend *= this.getTaxeRate();
+
+    return inEur === false ? dividend : dividend * this.RateToEUR;
+  }
  
   getGain(inEur = false)
   {
@@ -32,6 +73,17 @@ class SecurityPostion
       return this.MarketPriceEUR - this.MarketCostEUR;
       
     return this.MarketPrice - this.MarketCost;
+  }
+
+  getGainDiff()
+  {
+    if (this.MarketPrice == null || this.MarketCost == null)
+      return 0.0;
+    if (this.NumberOfShares === 0)
+      return 0.0;
+
+
+    return 100.0 * this.MarketPrice / this.MarketCost - 100.0;
   }
 
   getDayGain(inEUR)
@@ -84,7 +136,31 @@ class CurrencyHelper
 
 export class Portfolio
 { 
-  getDayDiff(positions)
+  static getDividendRatio(positions)
+  {
+    let marketPrice = 0;
+    let dividend = 0;
+
+    positions.filter(position => position.NumberOfShares > 0).forEach(position => {
+      marketPrice += position.MarketPriceEUR;
+      dividend += position.getDividendYield(true);
+    });
+
+    return 100.0 * dividend / marketPrice;
+  }
+
+  static getDividendRate(positions)
+  {
+    let dividend = 0;
+
+    positions
+      .filter(position => position.NumberOfShares > 0)
+      .forEach(position => dividend += position.getDividendYield(true));
+
+    return dividend;
+  }
+
+  static getDayDiff(positions)
   {
     let marketPrice = 0;
     let dayGain = 0;
@@ -166,7 +242,7 @@ export class Portfolio
 
       const tickers = result.filter(o=>o.NumberOfShares > 0).map(o=> o.Ticker);
 
-      let yahooData = await new YahooFinanceLoader().Load(tickers, [YahooFinanceFields.RegularMarketPrice, YahooFinanceFields.RegularMarketPreviousClose]);
+      let yahooData = await new YahooFinanceLoader().Load(tickers, [YahooFinanceFields.RegularMarketPrice, YahooFinanceFields.RegularMarketPreviousClose, YahooFinanceFields.TrailingAnnualDividendRate]);
       result.forEach(o => o.Security = yahooData.find(y => y.symbol === o.Ticker));
 
       result.forEach(position =>

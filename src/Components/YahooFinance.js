@@ -19,6 +19,7 @@ class YahooFinance extends Component {
           gain : 0,
           dayDiff : 0,
           dividendYield : 0,
+          dividendRate : 0,
           sortBy: 'Name',
           sortDirection: SortDirection.ASC,
           displayInEUR : false,
@@ -55,14 +56,18 @@ class YahooFinance extends Component {
                 });
 
                 let gain = marketCost === 0 ? 0 : marketPrice/marketCost - 1.0;
-                let dayDiff = new Portfolio().getDayDiff(portfolio);
+                let dayDiff = Portfolio.getDayDiff(portfolio);
+                let dividendYield= Portfolio.getDividendRatio(portfolio);
+                let dividendRate = Portfolio.getDividendRate(portfolio);
 
                 this.setState({
                   marketCost:marketCost, 
                   marketPrice:marketPrice, 
                   gain:gain, 
                   pastGain:pastGain,
-                  dayDiff:dayDiff
+                  dayDiff:dayDiff,
+                  dividendYield:dividendYield,
+                  dividendRate:dividendRate
                 });
             });
       }
@@ -74,6 +79,18 @@ class YahooFinance extends Component {
             if (sortBy === 'Diff')
             {
               let diff = p.getDayDiff();
+              if (p.NumberOfShares === 0)
+                diff = null;
+                
+              if (diff == null && sortDirection === SortDirection.DESC)
+                diff = -100000000; // always at the bottom
+
+              return diff;
+            }
+
+            if (sortBy === 'GainPercent')
+            {
+              let diff = p.getGainDiff();
               if (p.NumberOfShares === 0)
                 diff = null;
                 
@@ -190,7 +207,7 @@ class YahooFinance extends Component {
     <br/>
     Past Gain: {this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
-    Dividend Yield: {this.state.dividendYield.toFixed(2)}%
+    Dividend Yield: {this.state.dividendYield.toFixed(2)}% ({this.state.dividendRate.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})})
     </td>
     <td style={{textAlign:'right', verticalAlign:'top'}}><CSVLink data={this.state.portfolio}>Download data</CSVLink></td>
     </tr>
@@ -226,6 +243,7 @@ class YahooFinance extends Component {
         <Column width={150} label="Market Cost" dataKey="MarketCost" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Price" dataKey="MarketPrice" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain(this.state.displayInEUR)} cellRenderer={this.renderPrice} />
+        <Column width={150} label="Gain %" dataKey="GainPercent" disableSort={false} cellDataGetter={({rowData}) => rowData.getGainDiff()} cellRenderer={this.renderPrice} />
         <Column width={150} label="Past Gain" dataKey="PastGain" disableSort={false} cellRenderer={this.renderPrice} />
     </Table>
     )}

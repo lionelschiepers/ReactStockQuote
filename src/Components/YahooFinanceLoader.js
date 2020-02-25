@@ -88,11 +88,13 @@ export const YahooFinanceFields = {
     ShortName,
     SourceInterval,
     */
-    Symbol,
+    Symbol : 'symbol',
     /*
     Tradeable,
-    TrailingAnnualDividendRate,
-    TrailingAnnualDividendYield,
+    */
+    TrailingAnnualDividendRate : 'trailingAnnualDividendRate',
+    TrailingAnnualDividendYield : 'trailingAnnualDividendYield',
+    /*
     TrailingPE,
     TwoHundredDayAverage,
     TwoHundredDayAverageChange,
