@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Portfolio } from './Portfolio';
 import './YahooFinance.css';
 
+import { CSVLink/*, CSVDownload*/ } from "react-csv";
 
 class YahooFinance extends Component {
     constructor(props) {
@@ -177,18 +178,24 @@ class YahooFinance extends Component {
         return (
 <div>
   <div style={{textAlign:'left'}}>
-    Market Price:{this.state.marketPrice.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    <table style={{width:'100%'}}>
+      <tr><td>
+    Market Price: {this.state.marketPrice.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
-    Market Cost:{this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    Market Cost: {this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
-    Total Gain:{(this.state.gain * 100.0).toFixed(2)}%
+    Total Gain: {(this.state.gain * 100.0).toFixed(2)}%
     <br/>
-    Day diff:{(this.state.dayDiff * 100.0).toFixed(2)}%
+    Day diff: {(this.state.dayDiff * 100.0).toFixed(2)}%
     <br/>
-    Past Gain:{this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+    Past Gain: {this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
     <br/>
-    Dividend Yield:{this.state.dividendYield.toFixed(2)}
-    <br/><br />
+    Dividend Yield: {this.state.dividendYield.toFixed(2)}%
+    </td>
+    <td style={{textAlign:'right', verticalAlign:'top'}}><CSVLink data={this.state.portfolio}>Download data</CSVLink></td>
+    </tr>
+    </table>
+    <br />
   </div>
   <div style={{textAlign:'left'}}>
 		<input type="checkbox" onChange={this.handleCheck} defaultChecked={this.state.displayInEUR}/> Display in EUR
