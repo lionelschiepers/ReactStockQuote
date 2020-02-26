@@ -196,21 +196,24 @@ class YahooFinance extends Component {
 <div>
   <div style={{textAlign:'left'}}>
     <table style={{width:'100%'}}>
-      <tr><td>
-    Market Price: {this.state.marketPrice.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
-    <br/>
-    Market Cost: {this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
-    <br/>
-    Total Gain: {(this.state.gain * 100.0).toFixed(2)}%
-    <br/>
-    Day diff: {(this.state.dayDiff * 100.0).toFixed(2)}%
-    <br/>
-    Past Gain: {this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
-    <br/>
-    Dividend Yield: {this.state.dividendYield.toFixed(2)}% ({this.state.dividendRate.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})})
-    </td>
-    <td style={{textAlign:'right', verticalAlign:'top'}}><CSVLink data={this.state.portfolio}>Download data</CSVLink></td>
-    </tr>
+      <tbody>
+      <tr>
+        <td>
+          Market Price: {this.state.marketPrice.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+          <br/>
+          Market Cost: {this.state.marketCost.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+          <br/>
+          Total Gain: {(this.state.gain * 100.0).toFixed(2)}%
+          <br/>
+          Day diff: {(this.state.dayDiff * 100.0).toFixed(2)}%
+          <br/>
+          Past Gain: {this.state.pastGain.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})}
+          <br/>
+          Dividend Yield: {this.state.dividendYield.toFixed(2)}% ({this.state.dividendRate.toLocaleString("fr-BE", {style: "currency", currency: "EUR"})})
+        </td>
+        <td style={{textAlign:'right', verticalAlign:'top'}}><CSVLink data={this.state.portfolio}>Download data</CSVLink></td>
+      </tr>
+    </tbody>
     </table>
     <br />
   </div>
