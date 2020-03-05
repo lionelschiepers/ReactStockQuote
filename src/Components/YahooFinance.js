@@ -153,6 +153,11 @@ class YahooFinance extends Component {
             postData = '%';
           }
 
+          if (dataKey === 'GainPercent')
+          {
+            postData = '%';
+          }
+
           if (dataKey === 'MarketCost' && this.state.displayInEUR)
             cellData = rowData.MarketCostEUR;
             if (dataKey === 'MarketPrice' && this.state.displayInEUR)
@@ -245,7 +250,7 @@ class YahooFinance extends Component {
         <Column width={100} label="Shares" dataKey="NumberOfShares" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Cost" dataKey="MarketCost" disableSort={false} cellRenderer={this.renderPrice} />
         <Column width={150} label="Market Price" dataKey="MarketPrice" disableSort={false} cellRenderer={this.renderPrice} />
-        <Column width={150} label="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain(this.state.displayInEUR)} cellRenderer={this.renderPrice} />
+        <Column width={150} label="Gain" dataKey="Gain" disableSort={false} cellDataGetter={({rowData}) => rowData.getGain(this.state.displayInEUR)} cellRenderer={this.renderPrice} />
         <Column width={150} label="Gain %" dataKey="GainPercent" disableSort={false} cellDataGetter={({rowData}) => rowData.getGainDiff()} cellRenderer={this.renderPrice} />
         <Column width={150} label="Past Gain" dataKey="PastGain" disableSort={false} cellRenderer={this.renderPrice} />
     </Table>
