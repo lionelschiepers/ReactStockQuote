@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/ReactStockQuote/static/css/main.b1990d10.chunk.css",
-    "main.js": "/ReactStockQuote/static/js/main.9f1a2102.chunk.js",
-    "main.js.map": "/ReactStockQuote/static/js/main.9f1a2102.chunk.js.map",
-    "runtime-main.js": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js",
-    "runtime-main.js.map": "/ReactStockQuote/static/js/runtime-main.c4d13ba9.js.map",
+    "main.css": "/ReactStockQuote/static/css/main.a485211a.chunk.css",
+    "main.js": "/ReactStockQuote/static/js/main.a521ad8d.chunk.js",
+    "main.js.map": "/ReactStockQuote/static/js/main.a521ad8d.chunk.js.map",
+    "runtime-main.js": "/ReactStockQuote/static/js/runtime-main.340a3d4c.js",
+    "runtime-main.js.map": "/ReactStockQuote/static/js/runtime-main.340a3d4c.js.map",
     "static/css/2.71916e70.chunk.css": "/ReactStockQuote/static/css/2.71916e70.chunk.css",
-    "static/js/2.dd2a5642.chunk.js": "/ReactStockQuote/static/js/2.dd2a5642.chunk.js",
-    "static/js/2.dd2a5642.chunk.js.map": "/ReactStockQuote/static/js/2.dd2a5642.chunk.js.map",
+    "static/js/2.48335140.chunk.js": "/ReactStockQuote/static/js/2.48335140.chunk.js",
+    "static/js/2.48335140.chunk.js.map": "/ReactStockQuote/static/js/2.48335140.chunk.js.map",
     "index.html": "/ReactStockQuote/index.html",
-    "precache-manifest.a186ae3076c77dc129f2b8b45bcdd2a8.js": "/ReactStockQuote/precache-manifest.a186ae3076c77dc129f2b8b45bcdd2a8.js",
+    "precache-manifest.4efeaa86168a7d6af2c780b1b287c044.js": "/ReactStockQuote/precache-manifest.4efeaa86168a7d6af2c780b1b287c044.js",
     "service-worker.js": "/ReactStockQuote/service-worker.js",
     "static/css/2.71916e70.chunk.css.map": "/ReactStockQuote/static/css/2.71916e70.chunk.css.map",
-    "static/css/main.b1990d10.chunk.css.map": "/ReactStockQuote/static/css/main.b1990d10.chunk.css.map",
-    "static/js/2.dd2a5642.chunk.js.LICENSE.txt": "/ReactStockQuote/static/js/2.dd2a5642.chunk.js.LICENSE.txt"
+    "static/css/main.a485211a.chunk.css.map": "/ReactStockQuote/static/css/main.a485211a.chunk.css.map",
+    "static/js/2.48335140.chunk.js.LICENSE.txt": "/ReactStockQuote/static/js/2.48335140.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.c4d13ba9.js",
+    "static/js/runtime-main.340a3d4c.js",
     "static/css/2.71916e70.chunk.css",
-    "static/js/2.dd2a5642.chunk.js",
-    "static/css/main.b1990d10.chunk.css",
-    "static/js/main.9f1a2102.chunk.js"
+    "static/js/2.48335140.chunk.js",
+    "static/css/main.a485211a.chunk.css",
+    "static/js/main.a521ad8d.chunk.js"
   ]
 }
