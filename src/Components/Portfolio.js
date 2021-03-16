@@ -45,6 +45,8 @@ class SecurityPostion
       return 0.872 * 0.7;
     else if (this.Ticker.endsWith(".L"))
       return 0.7;
+    else if (this.Ticker.endsWith(".MC"))
+      return 0.81 * 0.7;
     else 
       return 0.7; // at least belgian taxes
   }
