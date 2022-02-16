@@ -3,10 +3,15 @@ import _ from 'lodash';
 
 
 const anyCorsHttp = axios.create(
-    { baseURL:'https://cors-anywhere.herokuapp.com' }
-  );
+   // { baseURL:'https://cors-anywhere.herokuapp.com' }
+   // webapp doesn't support 'https' in the query string 
+   { baseURL:'https://stockquote-cors.azurewebsites.net' }
+   
+);
   
-const yahooFinanceUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
+//const yahooFinanceUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
+// webapp doesn't support 'https' in the query string 
+const yahooFinanceUrl = 'query1.finance.yahoo.com:443/v7/finance/quote';
   
   function getUrl(quotes, fields)
   {

@@ -8,7 +8,9 @@ class Cache
 // i.e: let rate = await GetRate('USD', 'EUR')
 export async function GetRate(from, to)
 {
-    const url = 'https://cors-anywhere.herokuapp.com/https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
+    // const url = 'https://cors-anywhere.herokuapp.com/https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
+    const url = 'https://stockquote-cors.azurewebsites.net/www.ecb.europa.eu:443/stats/eurofxref/eurofxref-daily.xml';
+    // const url = 'http://localhost/https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
     if (Cache.Rates == null)
     {
         await axios
