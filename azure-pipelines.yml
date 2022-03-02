@@ -17,5 +17,19 @@ steps:
 
 - script: |
     npm install
+  displayName: 'npm install dependencies'
+
+- script: |
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm build'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'build'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
