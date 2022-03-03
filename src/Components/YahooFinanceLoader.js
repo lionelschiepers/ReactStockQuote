@@ -1,29 +1,27 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-
 const anyCorsHttp = axios.create(
    // { baseURL:'https://cors-anywhere.herokuapp.com' }
    // webapp doesn't support 'https' in the query string 
-   { baseURL:'https://stockquote-cors.azurewebsites.net' }
+   // { baseURL:'https://stockquote-cors.azurewebsites.net' }
+   { baseURL:'https://zealous-pebble-0e123ed03.1.azurestaticapps.net/api/yahoo-finance' }
    
 );
-  
+ 
 //const yahooFinanceUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
 // webapp doesn't support 'https' in the query string 
-const yahooFinanceUrl = 'query1.finance.yahoo.com:443/v7/finance/quote';
-  
-  function getUrl(quotes, fields)
-  {
-    if (!_.isArray(quotes))
-      quotes = [quotes];
-  
-      let url = yahooFinanceUrl + '?symbols=' + _.join(quotes, ',');
-      if (fields == null)
-        return url;
-  
-      return url + "&fields=" + _.join(fields, ',');
-  }
+//const yahooFinanceUrl = 'query1.finance.yahoo.com:443/v7/finance/quote';
+const yahooFinanceUrl = "";
+
+function getUrl(quotes, fields) {
+  if (!_.isArray(quotes)) quotes = [quotes];
+
+  let url = yahooFinanceUrl + "?symbols=" + _.join(quotes, ",");
+  if (fields == null) return url;
+
+  return url + "&fields=" + _.join(fields, ",");
+}
 
 export const YahooFinanceFields = {
     /*

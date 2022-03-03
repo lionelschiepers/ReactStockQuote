@@ -10,7 +10,8 @@ export async function GetRate(from, to)
 {
     // const url = 'https://cors-anywhere.herokuapp.com/https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
     // webapp doesn't support 'https' in the query string 
-    const url = 'https://stockquote-cors.azurewebsites.net/www.ecb.europa.eu:443/stats/eurofxref/eurofxref-daily.xml';
+    // const url = 'https://stockquote-cors.azurewebsites.net/www.ecb.europa.eu:443/stats/eurofxref/eurofxref-daily.xml';
+    const url = 'https://zealous-pebble-0e123ed03.1.azurestaticapps.net/api/exchange-rate-ecb';
     // const url = 'http://localhost/https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
     if (Cache.Rates == null)
     {
