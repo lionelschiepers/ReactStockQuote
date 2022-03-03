@@ -39,6 +39,7 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+  condition: eq(false, true)
 - task: AzureStaticWebApp@0
   inputs:
     app_location: '/'
