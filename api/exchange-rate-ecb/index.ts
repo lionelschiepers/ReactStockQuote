@@ -16,7 +16,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             body: responseMessage,
             headers: 
             {
-                'Content-Type': responseContentType
+                'Content-Type': responseContentType,
+                'Cache-Control': 'public, max-age=86400'
             }
         };
     }
