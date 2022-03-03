@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import parser  from 'csv-parse/lib/sync';
+// import parser  from 'csv-parse/lib/sync';
+import papa  from 'papaparse';
 import axios from 'axios';
 import { GetRate } from './ExchangeRates';
 import{ YahooFinanceLoader, YahooFinanceFields } from './YahooFinanceLoader'
@@ -186,7 +187,8 @@ export class Portfolio
         await axios
           .get(url)
           .then(res => {
-            const parsedCsv = parser(res.data, {columns:true});
+//            const parsedCsv = parser(res.data, {columns:true});
+            const parsedCsv = papa.parse(res.data, {header:true}).data;
 
             parsedCsv.forEach(data =>
             {
