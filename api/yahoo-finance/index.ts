@@ -29,24 +29,9 @@ const httpTrigger: AzureFunction = async function (
       status: response.status,
       body: responseMessage,
       headers: {
-        "Content-Type": responseContentType,
-//        "Access-Control-Allow-Origin": "*",
-//        "Access-Control-Allow-Methods": "GET",
+        "Content-Type": responseContentType
       },
     };
-
-    // code to refactor for production and use application settings
-    let origin = req.headers["origin"] || req.headers["Origin"];
-    const cors_domains = [
-        "https://zealous-pebble-0e123ed03.1.azurestaticapps.net/",
-        "http://localhost:3000",
-        "http://localhost:7071"
-      ];
-
-    if (origin != null && cors_domains.indexOf(origin) >= 0) {
-      context.res.headers["Access-Control-Allow-Origin"] = origin;
-      context.res.headers["Access-Control-Allow-Methods"] = "GET";
-    }
   } catch (e) {
     context.res = {
       status: e.response.status,
