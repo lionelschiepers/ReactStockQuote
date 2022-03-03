@@ -14,7 +14,7 @@ steps:
   inputs:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
-
+  condition: eq(false, true)
 - script: npm install --production
   displayName: 'npm install dependencies'
   condition: eq(false, true)
