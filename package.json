@@ -15,7 +15,7 @@
     "react": "^16.13.1",
     "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "4.0.3",
     "react-virtualized": "^9.21.2"
   },
   "scripts": {
