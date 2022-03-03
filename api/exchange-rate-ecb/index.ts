@@ -27,6 +27,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             status: e.response.status,
             body: e.response.statusText
         };
+
+        context.log.error(e);
     }
 };
 

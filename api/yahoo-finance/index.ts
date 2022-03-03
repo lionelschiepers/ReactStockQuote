@@ -13,6 +13,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         const baseUrl = 'https://query1.finance.yahoo.com/v7/finance/quote';
         const requestUrl = baseUrl + '?' + queryString;
 
+        // https://blog.logrocket.com/async-await-in-typescript/
         const response = await axios.get<string>(requestUrl);
 
         const responseMessage = response.data;
@@ -33,6 +34,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             status: e.response.status,
             body: e.response.statusText
         };
+
+        context.log.error(e);
     }
 };
 
