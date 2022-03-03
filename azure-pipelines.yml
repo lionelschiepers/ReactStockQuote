@@ -12,7 +12,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '16.x'
+    versionSpec: '14.x'
   displayName: 'Install Node.js'
 
 - script: |
@@ -21,13 +21,18 @@ steps:
 
 - script: |
     npm run build
-  displayName: 'npm build'
+  displayName: 'npm build react app and proxy'
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'build'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'api'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/api'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
