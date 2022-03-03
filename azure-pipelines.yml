@@ -45,4 +45,4 @@ steps:
     app_location: '/'
     output_location: 'build'
     api_location: '/api'
-    azure_static_web_apps_api_token: 'ae0371e33bb9600b69fe7bd62a4812b6f4ad0c3c09c0537649ff61e49cb05e761-c96fe1cf-f72d-42f6-b5d8-fe1e5739a1f500369359'
+    azure_static_web_apps_api_token: '${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}'
