@@ -15,29 +15,31 @@ steps:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install --production
+- script: npm install --production
   displayName: 'npm install dependencies'
-
-- script: |
-    npm run build
+  condition: eq(false, true)
+- script: npm run build
   displayName: 'npm build react app and proxy'
+  condition: eq(false, true)
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'build'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
+  condition: eq(false, true)
 - task: CopyFiles@2
   inputs:
     SourceFolder: 'api'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/api'
+  condition: eq(false, true)
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+  condition: eq(false, true)
 - task: AzureStaticWebApp@0
   inputs:
     app_location: '/'
