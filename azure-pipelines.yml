@@ -26,9 +26,9 @@ steps:
   inputs:
     SourceFolder: 'build'
     Contents: '**'
-    TargetFolder: '
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
-- task: CopyFiles@3
+- task: CopyFiles@2
   inputs:
     SourceFolder: 'api'
     Contents: '**'
