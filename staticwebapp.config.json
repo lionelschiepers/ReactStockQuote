@@ -2,7 +2,7 @@
   "globalHeaders": 
   {
     "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'",
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": "https://zealous-pebble-0e123ed03.1.azurestaticapps.net",
     "Access-Control-Allow-Methods": "POST, GET, OPTIONS"
   },
   "platform": {

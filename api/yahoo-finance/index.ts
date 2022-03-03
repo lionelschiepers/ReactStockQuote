@@ -23,7 +23,9 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
             status: response.status,
             body: responseMessage,
             headers: {
-                'Content-Type': responseContentType
+                'Content-Type': responseContentType,
+                'Access-Control-Allow-Origin': '*',
+                "Access-Control-Allow-Methods": "GET"
             }
         };
     }
