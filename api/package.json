@@ -17,6 +17,7 @@
     "typescript": "^3.3.3"
   },
   "dependencies": {
-    "axios": "^0.26.0"
+    "axios": "^0.26.0",
+    "azure-functions-core-tools": "^3.0.3904"
   }
 }
