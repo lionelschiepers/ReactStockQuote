@@ -1,29 +1,39 @@
-import React from 'react';
-// import logo from './logo.svg';
-import './App.css';
-import YahooFinance from "./Components/YahooFinance";
-/*
-<header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-*/
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Container } from "reactstrap";
+import { useAuth0 } from "@auth0/auth0-react";
+
+import Loading from "./Components/Loading";
+import NavBar from "./Components/NavBar";
+
+import Home from "./views/Home";
+import Profile from "./views/Profile";
+
+import "./App.css";
 
 function App() {
+  const { isLoading, error } = useAuth0();
+
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="App">
-      <YahooFinance />
-    </div>
+    <BrowserRouter>
+      <div id="app" className="d-flex flex-column">
+        <NavBar />
+        <Container fluid className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+          </Routes>
+        </Container>
+      </div>
+    </BrowserRouter>
   );
 }
 
