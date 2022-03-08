@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
+import { withAuth0 } from "@auth0/auth0-react";
 import "react-virtualized/styles.css"; // only needs to be imported once
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
@@ -31,42 +32,45 @@ class YahooFinance extends Component {
   }
 
   componentDidMount() {
-    let portfolioBuilder = new Portfolio();
-    portfolioBuilder
-      .Load(
-        "https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv"
-      )
-      .then((portfolio) => {
-        this.setState({ portfolio: portfolio });
+    const { isAuthenticated, user } = this.props.auth0;
+    if (!isAuthenticated) return;
 
-        let marketCost = 0;
-        let marketPrice = 0;
-        let pastGain = 0;
-        portfolio.forEach((position) => {
-          pastGain += position.PastGainEUR;
+    let portfolioUri =
+      "https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/" +
+      encodeURIComponent(user.email) +
+      ".csv";
 
-          if (Number.isNaN(position.MarketCostEUR)) return;
-          if (Number.isNaN(position.MarketPriceEUR)) return;
+    Portfolio.Load(portfolioUri).then((portfolio) => {
+      this.setState({ portfolio: portfolio });
 
-          marketCost += position.MarketCostEUR;
-          marketPrice += position.MarketPriceEUR;
-        });
+      let marketCost = 0;
+      let marketPrice = 0;
+      let pastGain = 0;
+      portfolio.forEach((position) => {
+        pastGain += position.PastGainEUR;
 
-        let gain = marketCost === 0 ? 0 : marketPrice / marketCost - 1.0;
-        let dayDiff = Portfolio.getDayDiff(portfolio);
-        let dividendYield = Portfolio.getDividendRatio(portfolio);
-        let dividendRate = Portfolio.getDividendRate(portfolio);
+        if (Number.isNaN(position.MarketCostEUR)) return;
+        if (Number.isNaN(position.MarketPriceEUR)) return;
 
-        this.setState({
-          marketCost: marketCost,
-          marketPrice: marketPrice,
-          gain: gain,
-          pastGain: pastGain,
-          dayDiff: dayDiff,
-          dividendYield: dividendYield,
-          dividendRate: dividendRate,
-        });
+        marketCost += position.MarketCostEUR;
+        marketPrice += position.MarketPriceEUR;
       });
+
+      let gain = marketCost === 0 ? 0 : marketPrice / marketCost - 1.0;
+      let dayDiff = Portfolio.getDayDiff(portfolio);
+      let dividendYield = Portfolio.getDividendRatio(portfolio);
+      let dividendRate = Portfolio.getDividendRate(portfolio);
+
+      this.setState({
+        marketCost: marketCost,
+        marketPrice: marketPrice,
+        gain: gain,
+        pastGain: pastGain,
+        dayDiff: dayDiff,
+        dividendYield: dividendYield,
+        dividendRate: dividendRate,
+      });
+    });
   }
 
   _internalSort(list, sortBy, sortDirection) {
@@ -354,4 +358,4 @@ class YahooFinance extends Component {
   }
 }
 
-export default YahooFinance;
+export default withAuth0(YahooFinance);
