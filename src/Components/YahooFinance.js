@@ -6,6 +6,10 @@ import _ from "lodash";
 import { Portfolio } from "./Portfolio";
 import "./YahooFinance.css";
 
+import { withAITracking } from '@microsoft/applicationinsights-react-js';
+import { reactPlugin } from './../AppInsights';
+
+
 import { CSVLink /*, CSVDownload*/ } from "react-csv";
 
 class YahooFinance extends Component {
@@ -358,4 +362,4 @@ class YahooFinance extends Component {
   }
 }
 
-export default withAuth0(YahooFinance);
+export default withAITracking(reactPlugin, withAuth0(YahooFinance));
