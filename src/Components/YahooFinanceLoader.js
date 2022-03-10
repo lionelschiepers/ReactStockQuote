@@ -98,7 +98,9 @@ export class YahooFinanceLoader
 { 
   async Load(symbols, fields)
   {
-    let now = Date.now();
+    const ttl = process.env.REACT_APP_YAHOO_TTL * 1000;
+  
+    const now = Date.now();
     
     let result = [];
 
@@ -109,7 +111,7 @@ export class YahooFinanceLoader
       if (cacheItem != null)
       {
         cacheItem = JSON.parse(cacheItem);
-        if ((now - cacheItem.Date) < 1000 * 60 * 5) // 5 minutes
+        if ((now - cacheItem.Date) < ttl) // 5 minutes
         {
           result.push(cacheItem);
           symbols.splice(i, 1);
@@ -122,20 +124,26 @@ export class YahooFinanceLoader
     }
 
     let chunks = _.chunk(symbols, 50);
-    for (let i =0;i<chunks.length;i++)
-    {
-        let chunk = chunks[i];
-        let chunkData = await anyCorsHttp
-            .get(getUrl(chunk, fields))
-            .then(json => json.data.quoteResponse.result);
-        
-        chunkData.forEach(o =>
-        {
-          o.Date = now;
-          localStorage.setItem(o.symbol, JSON.stringify(o));
-          result.push(o);
+    let urls= [];
+    chunks.forEach((item, index, array) => {
+      let url = getUrl(chunks[index], fields);
+      urls.push(axios.get(url));
+    });
+
+    // fetch all urls in parallel.
+    await axios.all(urls).then(
+      axios.spread((...responses) => {
+        responses.forEach((response) => {
+          let chunkData = response.data.quoteResponse.result;
+
+          chunkData.forEach((o) => {
+            o.Date = now;
+            localStorage.setItem(o.symbol, JSON.stringify(o));
+            result.push(o);
+          });
         });
-    }
+      })
+    );
 
     return result;
   }
