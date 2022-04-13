@@ -1,7 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-const anyCorsHttp = axios.create();
+// const anyCorsHttp = axios.create();
 
 function getUrl(quotes, fields) {
   if (!_.isArray(quotes)) quotes = [quotes];
