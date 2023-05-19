@@ -16,7 +16,7 @@ const httpTrigger: AzureFunction = async function (
           encodeURIComponent(key) + "=" + encodeURIComponent(req.query[key])
       )
       .join("&");
-    const baseUrl = "https://query1.finance.yahoo.com/v7/finance/quote";
+    const baseUrl = "https://query1.finance.yahoo.com/v6/finance/quote";
     const requestUrl = baseUrl + "?" + queryString;
 
     // https://blog.logrocket.com/async-await-in-typescript/
