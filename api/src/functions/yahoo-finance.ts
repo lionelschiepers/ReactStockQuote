@@ -1,19 +1,16 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from "axios";
 
-const httpTrigger: AzureFunction = async function (
-  context: Context,
-  req: HttpRequest
-): Promise<void> {
+export async function yahooFinance(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log("HTTP trigger YahooFinance launched");
 
   try {
     // sample url https://query1.finance.yahoo.com/v7/finance/quote?symbols=UNA.AS&fields=regularMarketPrice,regularMarketPreviousClose,trailingAnnualDividendRate
 
-    const queryString = Object.keys(req.query)
+    const queryString = Object.keys(request.query)
       .map(
         (key) =>
-          encodeURIComponent(key) + "=" + encodeURIComponent(req.query[key])
+          encodeURIComponent(key) + "=" + encodeURIComponent(request.query[key])
       )
       .join("&");
     const baseUrl = "https://query1.finance.yahoo.com/v6/finance/quote";
@@ -25,7 +22,7 @@ const httpTrigger: AzureFunction = async function (
     const responseMessage = response.data;
     const responseContentType = response.headers["content-type"];
 
-    context.res = {
+    return {
       status: response.status,
       body: responseMessage,
       headers: {
@@ -33,13 +30,17 @@ const httpTrigger: AzureFunction = async function (
       },
     };
   } catch (e) {
-    context.res = {
+    return {
       status: e.response.status,
       body: e.response.statusText,
     };
 
-    context.log.error(e);
+    context.error(e);
   }
 };
 
-export default httpTrigger;
+app.http('yahoo-finance', {
+  methods: ['GET', 'POST'],
+  authLevel: 'anonymous',
+  handler: yahooFinance
+});

@@ -1,10 +1,7 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from "axios";
 
-const httpTrigger: AzureFunction = async function (
-  context: Context,
-  req: HttpRequest
-): Promise<void> {
+export async function exchangeRateEcb(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit>  {
   context.log("HTTP trigger GetExchangeRates launched");
   try {
     const response = await axios.get<string>(
@@ -13,22 +10,26 @@ const httpTrigger: AzureFunction = async function (
     const responseMessage = response.data;
     const responseContentType = response.headers["content-type"];
 
-    context.res = {
+    return {
       status: response.status,
       body: responseMessage,
       headers: {
         "Content-Type": responseContentType,
         "Cache-Control": "max-age=86400"
-      },
+      }
     };
   } catch (e) {
-    context.res = {
+    return {
       status: e.response.status,
       body: e.response.statusText,
     };
 
-    context.log.error(e);
+    context.error(e);
   }
 };
 
-export default httpTrigger;
+app.http('exchange-rate-ecb', {
+  methods: ['GET', 'POST'],
+  authLevel: 'anonymous',
+  handler: exchangeRateEcb
+});
