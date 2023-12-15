@@ -1,11 +1,16 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import axios from "axios";
+import yahooFinance2 from 'yahoo-finance2';
 
 export async function yahooFinance(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log("HTTP trigger YahooFinance launched");
 
   try {
     // sample url https://query1.finance.yahoo.com/v7/finance/quote?symbols=UNA.AS&fields=regularMarketPrice,regularMarketPreviousClose,trailingAnnualDividendRate
+
+    const symbols = request.query.get("symbols").split(",");
+    const fields = request.query.get("fields").split(",");
+    const results = await yahooFinance2.quote(symbols, {fields:fields});
 
     const queryString = Object.keys(request.query)
       .map(
