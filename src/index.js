@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from "@auth0/auth0-react";
 import history from "./utils/history";
 import { getConfig } from "./config";
+import { createRoot } from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -23,17 +24,29 @@ const providerConfig = {
   domain: config.domain,
   clientId: config.clientId,
   ...(config.audience ? { audience: config.audience } : null),
-  redirectUri: window.location.origin,
+  authorizationParams: {
+    redirect_uri: window.location.origin
+  },
+//  redirectUri: window.location.origin,
   onRedirectCallback,
 };
 
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(
+<Auth0Provider {...providerConfig}>
+  <App />
+</Auth0Provider>,
+);
 
+/*
 ReactDOM.render(
     <Auth0Provider {...providerConfig}>
       <App />
     </Auth0Provider>,
     document.getElementById("root")
   );
+*/
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

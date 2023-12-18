@@ -134,7 +134,7 @@ export class YahooFinanceLoader
     await axios.all(urls).then(
       axios.spread((...responses) => {
         responses.forEach((response) => {
-          let chunkData = response.data.quoteResponse.result;
+          let chunkData = response.data;
 
           chunkData.forEach((o) => {
             o.Date = now;
