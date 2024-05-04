@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "7.24.5",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^14.1.0",
     "@testing-library/user-event": "^13.5.0",
-    "@babel/plugin-transform-private-property-in-object": "7.24.5",
     "react-scripts": "5.0.1"
   },
   "dependencies": {
@@ -19,11 +19,12 @@
     "gh-pages": "^6.1.1",
     "helmet": "^3.21.2",
     "highlight.js": "^11.4.0",
+    "http-proxy-middleware": "^3.0.0",
     "lodash": "^4.17.21",
     "papaparse": "^5.3.1",
+    "react": "18.3.1",
     "react-csv": "^2.0.3",
     "react-data-table-component": "^7.5.3",
-    "react": "18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.2.2",
     "react-virtualized": "^9.22.4",

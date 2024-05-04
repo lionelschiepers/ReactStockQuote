@@ -10,7 +10,7 @@
     "watch": "tsc --w",
     "prestart": "npm run build && func extensions install",
     "prestart:production": "npm run build",
-    "start:host": "func start",
+    "start:host": "func start --cors *",
     "start": "npm-run-all --parallel start:host watch",
     "test": "echo \"No tests yet...\"",
     "clean": "rimraf dist"
