@@ -16,9 +16,9 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@azure/functions": "^4.4.0",
-    "axios": "^1.6.8",
-    "yahoo-finance2": "^2.11.2",
+    "@azure/functions": "^4.5.0",
+    "axios": "^1.7.2",
+    "yahoo-finance2": "^2.11.3",
     "express": "^4.19.2"
   },
   "devDependencies": {
