@@ -1,23 +1,22 @@
 FROM node:lts-alpine AS builder
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 WORKDIR /app
 
 COPY package.json ./
 
-RUN npm install --production
-
+RUN npm install --omit=dev
 
 COPY . .
 
-RUN npm run build --production
+RUN npm run build --omit=dev
 
 CMD ["npm", "start"]
 
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=builder /app/build /usr/share/nginx/html
 
