@@ -1,14 +1,10 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
 import { withAuth0 } from "@auth0/auth0-react";
 import "react-virtualized/styles.css"; // only needs to be imported once
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
 import "./YahooFinance.css";
-
-import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import { reactPlugin } from './../AppInsights';
-
 
 import { CSVLink /*, CSVDownload*/ } from "react-csv";
 
@@ -362,4 +358,4 @@ class YahooFinance extends Component {
   }
 }
 
-export default withAITracking(reactPlugin, withAuth0(YahooFinance));
+export default withAuth0(YahooFinance);
