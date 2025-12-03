@@ -3,17 +3,15 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from "@auth0/auth0-react";
-// import { createBrowserHistory } from "history";
-//import history from "./utils/history";
+// import myHistory from "./utils/myHistory";
 import { getConfig } from "./config";
 import { createRoot } from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// const history = createBrowserHistory();
 
 const onRedirectCallback = (appState) => {
-//  history.push(
+//  myHistory.push(
 //    appState && appState.returnTo ? appState.returnTo : window.location.pathname
 //  );
 };
