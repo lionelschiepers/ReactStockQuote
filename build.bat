@@ -1,4 +1,5 @@
 REM docker build -t lionelschiepers/repo:latest .
+docker build -t lionelschiepers/stockquote-react:latest -f .\Dockerfile .
 
 docker-compose -f docker-compose.prod.yml build
 

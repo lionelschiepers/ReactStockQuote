@@ -1,17 +1,18 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";
-import yahooFinance2 from 'yahoo-finance2';
+// import axios from "axios";
+// import yahooFinance2  from 'yahoo-finance2';
 
+const yahooFinance2 = require('yahoo-finance2').default;
 // sample call: http://localhost:7071/api/yahoo-finance?symbols=MSFT&fields=regularMarketPrice
-export async function yahooFinance(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function yahooFinanceHandler(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log("HTTP trigger YahooFinance launched");
 
   try {
     // sample url https://query1.finance.yahoo.com/v7/finance/quote?symbols=UNA.AS&fields=regularMarketPrice,regularMarketPreviousClose,trailingAnnualDividendRate
 
-    const symbols = request.query.get("symbols").split(",");
-    const fields = request.query.get("fields").split(",");
-    const results = await yahooFinance2.quote(symbols, { fields: fields });
+    const querySymbols = request.query.get("symbols").split(",");
+    const queryFields = request.query.get("fields").split(",");
+    const results = await yahooFinance2.quote(querySymbols, { fields: queryFields });
     /*
         const queryString = Object.keys(request.query)
           .map(
@@ -53,5 +54,5 @@ export async function yahooFinance(request: HttpRequest, context: InvocationCont
 app.http('yahoo-finance', {
   methods: ['GET', 'POST'],
   authLevel: 'anonymous',
-  handler: yahooFinance
+  handler: yahooFinanceHandler
 });
