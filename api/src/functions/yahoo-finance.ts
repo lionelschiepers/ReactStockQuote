@@ -14,7 +14,10 @@ export async function yahooFinanceHandler(request: HttpRequest, context: Invocat
     const responseMessage = await yahooFinance.quote(querySymbols, { fields: queryFields });
 
     return {
-      jsonBody: responseMessage
+      jsonBody: responseMessage,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     };
   } catch (e) {
     context.error(e);

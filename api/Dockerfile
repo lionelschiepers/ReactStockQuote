@@ -7,14 +7,22 @@
 # FROM mcr.microsoft.com/azure-functions/node:4-node22-appservice
 FROM mcr.microsoft.com/azure-functions/node:4-node24
 
-ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
-    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+RUN apt-get update
+RUN apt-get upgrade -y
+
+ENV AzureWebJobsScriptRoot=/home/site/wwwroot
+ENV AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+# doesn't work as expected for an unknown reason, so added headers in the function code directly
+# ENV CORS_ALLOWED_ORIGINS="[\"*\"]" 
 
 WORKDIR /home/site/wwwroot
 
-# Copy package.json and install packages before copying the rest of the code to enable caching
-COPY package.json package.json
-RUN npm install
+# copy both package.json and package-lock.json to leverage layer cache & reproducible installs
+COPY package*.json ./
+
+# prefer npm ci when a lockfile exists (faster, deterministic)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+# RUN npm audit fix
 
 # Copy the rest of the code
 COPY . .

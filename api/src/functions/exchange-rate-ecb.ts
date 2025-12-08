@@ -15,6 +15,7 @@ export async function exchangeRateEcbHandler(request: HttpRequest, context: Invo
       status: response.status,
       body: responseMessage,
       headers: {
+        'Access-Control-Allow-Origin': '*',
         "Content-Type": responseContentType,
         "Cache-Control": "max-age=86400"
       }

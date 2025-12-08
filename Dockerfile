@@ -1,27 +1,39 @@
+# exposed on NAS with port 20003
+
 FROM node:lts-alpine AS builder
 
-ENV NODE_ENV=production
+ENV REACT_APP_YAHOO_URL http://ls-nas:20002/api/yahoo-finance
+ENV REACT_APP_EXCHANGE_RATES_URL http://ls-nas:20002/api/exchange-rate-ecb
 
 WORKDIR /app
 
-COPY package.json ./
+# copy both package.json and package-lock.json to leverage layer cache & reproducible installs
+COPY package*.json ./
 
-RUN npm install --omit=dev
+# prefer npm ci when a lockfile exists (faster, deterministic)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+# RUN npm audit fix
 
 COPY . .
 
-RUN npm run build --omit=dev
-
-CMD ["npm", "start"]
+# build with full dependencies present
+RUN npm run build
 
 FROM nginx:alpine AS production
 
 ENV NODE_ENV=production
+
+RUN apk update
+RUN apk upgrade --no-interactive --no-progress
 
 COPY --from=builder /app/build /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
+# simple HTTP healthcheck (uses wget from busybox)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -q --spider http://localhost:80/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
