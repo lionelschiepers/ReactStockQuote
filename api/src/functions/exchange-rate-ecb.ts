@@ -15,9 +15,10 @@ export async function exchangeRateEcbHandler(request: HttpRequest, context: Invo
       status: response.status,
       body: responseMessage,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        // CORS_ALLOWED_ORIGINS doesn't work as expected for an unknown reason, so added headers directly here
+        "Access-Control-Allow-Origin": "*",
         "Content-Type": responseContentType,
-        "Cache-Control": "max-age=86400"
+        "Cache-Control": "max-age=3600"
       }
     };
   } catch (e) {

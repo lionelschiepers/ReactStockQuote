@@ -16,7 +16,9 @@ export async function yahooFinanceHandler(request: HttpRequest, context: Invocat
     return {
       jsonBody: responseMessage,
       headers: {
-        'Access-Control-Allow-Origin': '*'
+        // CORS_ALLOWED_ORIGINS doesn't work as expected for an unknown reason, so added headers directly here
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "max-age=120"
       }
     };
   } catch (e) {
