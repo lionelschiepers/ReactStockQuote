@@ -1,8 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 const YahooFinance = require("yahoo-finance2").default;
-
-// import YahooFinance from "yahoo-finance2";
 const yahooFinance = new YahooFinance();
 
  // sample call: http://localhost:7071/api/yahoo-finance?symbols=MSFT&fields=regularMarketPrice
