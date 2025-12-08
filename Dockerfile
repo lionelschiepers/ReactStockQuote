@@ -2,8 +2,8 @@
 
 FROM node:lts-alpine AS builder
 
-ENV REACT_APP_YAHOO_URL http://ls-nas:20002/api/yahoo-finance
-ENV REACT_APP_EXCHANGE_RATES_URL http://ls-nas:20002/api/exchange-rate-ecb
+ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
+ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
 
 WORKDIR /app
 
