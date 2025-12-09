@@ -2,8 +2,12 @@
 
 FROM node:lts-alpine AS builder
 
-ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
-ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
+# if API is behind a reverse proxy, use relative URLs
+ENV REACT_APP_YAHOO_URL=api/yahoo-finance
+ENV REACT_APP_EXCHANGE_RATES_URL=api/exchange-rate-ecb
+
+# ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
+# ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
 
 ENV NODE_ENV=production
 
