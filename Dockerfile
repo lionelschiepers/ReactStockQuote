@@ -5,6 +5,8 @@ FROM node:lts-alpine AS builder
 ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
 ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
 
+ENV NODE_ENV=production
+
 WORKDIR /app
 
 # copy both package.json and package-lock.json to leverage layer cache & reproducible installs
@@ -21,15 +23,17 @@ RUN npm run build
 
 FROM nginx:alpine AS production
 
-ENV NODE_ENV=production
-
 RUN apk update
 RUN apk upgrade --no-interactive --no-progress
 
+# Copy the built application from the builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+ENV STOCKQUOTE_API_URL=https://stockquote-api.lionelschiepers.synology.me
+
+# Expose port 80
 EXPOSE 80
 
 # simple HTTP healthcheck (uses wget from busybox)
