@@ -98,7 +98,7 @@ export class YahooFinanceLoader
 { 
   async Load(symbols, fields)
   {
-    const ttl = process.env.REACT_APP_YAHOO_TTL * 1000;
+    const ttl = 300 * 1000;
   
     const now = Date.now();
     

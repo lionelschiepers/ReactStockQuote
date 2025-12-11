@@ -3,16 +3,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from "@auth0/auth0-react";
-import history from "./utils/history";
+// import myHistory from "./utils/myHistory";
 import { getConfig } from "./config";
 import { createRoot } from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const onRedirectCallback = (appState) => {
-  history.push(
-    appState && appState.returnTo ? appState.returnTo : window.location.pathname
-  );
+//  myHistory.push(
+//    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+//  );
 };
 
 // Please see https://auth0.github.io/auth0-react/interfaces/auth0_provider.auth0provideroptions.html

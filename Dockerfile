@@ -1,36 +1,45 @@
-# Stage 1: Build the application
+# exposed on NAS with port 20003
+
 FROM node:lts-alpine AS builder
 
-# Set environment variable
-ENV NODE_ENV production
+# if API is behind a reverse proxy, use relative URLs
+ENV REACT_APP_YAHOO_URL=api/yahoo-finance
+ENV REACT_APP_EXCHANGE_RATES_URL=api/exchange-rate-ecb
 
-# Set working directory
+# ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
+# ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
+
+ENV NODE_ENV=production
+
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json ./
-RUN npm install --production
+# copy both package.json and package-lock.json to leverage layer cache & reproducible installs
+COPY package*.json ./
 
-# Copy the rest of the application code
+# prefer npm ci when a lockfile exists (faster, deterministic)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+# RUN npm audit fix
+
 COPY . .
 
-# Build the application
-RUN npm run build --production
+# build with full dependencies present
+RUN npm run build
 
-# Stage 2: Serve the application using Nginx
 FROM nginx:alpine AS production
 
-# Set environment variable
-ENV NODE_ENV production
+RUN apk update
+RUN apk upgrade --no-interactive --no-progress
 
 # Copy the built application from the builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Copy Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Command to run Nginx
+# simple HTTP healthcheck (uses wget from busybox)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -q --spider http://localhost:80/ || exit 1
+
 CMD ["nginx", "-g", "daemon off;"]
