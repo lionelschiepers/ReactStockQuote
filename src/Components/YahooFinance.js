@@ -1,7 +1,7 @@
 import { Component } from "react";
-import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 import { withAuth0 } from "@auth0/auth0-react";
-import "react-virtualized/styles.css"; // only needs to be imported once
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
 import "./YahooFinance.css";
@@ -21,8 +21,8 @@ class YahooFinance extends Component {
       dayDiff: 0,
       dividendYield: 0,
       dividendRate: 0,
-      sortBy: "Name",
-      sortDirection: SortDirection.ASC,
+      sortBy: null,
+      sortDirection: null,
       displayInEUR: false,
     };
 
@@ -75,11 +75,15 @@ class YahooFinance extends Component {
 
   _internalSort(list, sortBy, sortDirection) {
     let orderedList = _.sortBy(list, (p) => {
+      if (sortBy === "Security.regularMarketPrice") {
+        return p.Security?.regularMarketPrice || 0;
+      }
+
       if (sortBy === "Diff") {
         let diff = p.getDayDiff();
         if (p.NumberOfShares === 0) diff = null;
 
-        if (diff == null && sortDirection === SortDirection.DESC)
+        if (diff == null && sortDirection === "DESC")
           diff = -100000000; // always at the bottom
 
         return diff;
@@ -89,10 +93,14 @@ class YahooFinance extends Component {
         let diff = p.getGainDiff();
         if (p.NumberOfShares === 0) diff = null;
 
-        if (diff == null && sortDirection === SortDirection.DESC)
+        if (diff == null && sortDirection === "DESC")
           diff = -100000000; // always at the bottom
 
         return diff;
+      }
+
+      if (sortBy === "Gain") {
+        return p.getGain(this.state.displayInEUR);
       }
 
       if (_.isString(p[sortBy])) return p[sortBy].toLowerCase(); // case insensitive sort.
@@ -100,7 +108,7 @@ class YahooFinance extends Component {
       return p[sortBy];
     });
 
-    if (sortDirection === SortDirection.DESC)
+    if (sortDirection === "DESC")
       orderedList = orderedList.reverse();
 
     return orderedList;
@@ -117,15 +125,8 @@ class YahooFinance extends Component {
     });
   }
 
-  renderPrice({
-    cellData,
-    columnData,
-    columnIndex,
-    dataKey,
-    isScrolling,
-    rowData,
-    rowIndex,
-  }) {
+  renderPrice(cellData, dataKey, rowData, rowIndex) {
+    if (isNaN(cellData)) return <div />;
     let postData = "";
 
     if (dataKey === "Security.regularMarketPrice" && rowData.Security != null) {
@@ -172,15 +173,7 @@ class YahooFinance extends Component {
     );
   }
 
-  renderName({
-    cellData,
-    columnData,
-    columnIndex,
-    dataKey,
-    isScrolling,
-    rowData,
-    rowIndex,
-  }) {
+  renderName(rowData, rowIndex) {
     return (
       <a
         className="stockName"
@@ -199,7 +192,7 @@ class YahooFinance extends Component {
   }
 
   render() {
-    const { portfolio, sortBy, sortDirection } = this.state;
+    const { portfolio } = this.state;
 
     return (
       <div>
@@ -249,109 +242,67 @@ class YahooFinance extends Component {
           <input
             type="checkbox"
             onChange={this.handleCheck}
-            defaultChecked={this.state.displayInEUR}
+            checked={this.state.displayInEUR}
           />{" "}
           Display in EUR
         </div>
         <div>
+          <div style={{ display: 'flex', fontWeight: 'bold', borderBottom: '1px solid #ccc' }}>
+            <div style={{ flex: '0 0 300px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'Name', sortDirection: this.state.sortBy === 'Name' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Name {this.state.sortBy === 'Name' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'Name' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'Security.regularMarketPrice', sortDirection: this.state.sortBy === 'Security.regularMarketPrice' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Price {this.state.sortBy === 'Security.regularMarketPrice' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'Security.regularMarketPrice' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'Diff', sortDirection: this.state.sortBy === 'Diff' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Diff {this.state.sortBy === 'Diff' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'Diff' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'NumberOfShares', sortDirection: this.state.sortBy === 'NumberOfShares' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Shares {this.state.sortBy === 'NumberOfShares' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'NumberOfShares' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'MarketCost', sortDirection: this.state.sortBy === 'MarketCost' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Market Cost {this.state.sortBy === 'MarketCost' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'MarketCost' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'MarketPrice', sortDirection: this.state.sortBy === 'MarketPrice' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Market Price {this.state.sortBy === 'MarketPrice' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'MarketPrice' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'Gain', sortDirection: this.state.sortBy === 'Gain' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Gain {this.state.sortBy === 'Gain' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'Gain' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'GainPercent', sortDirection: this.state.sortBy === 'GainPercent' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Gain % {this.state.sortBy === 'GainPercent' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'GainPercent' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+            <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={() => this._sort({ sortBy: 'PastGain', sortDirection: this.state.sortBy === 'PastGain' && this.state.sortDirection === 'ASC' ? 'DESC' : 'ASC' })}>
+              Past Gain {this.state.sortBy === 'PastGain' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'PastGain' && this.state.sortDirection === 'DESC' ? '↓' : ''}
+            </div>
+          </div>
           <AutoSizer disableHeight>
-            {({ height, width }) => (
-              <Table
-                width={width}
+            {({ width }) => (
+              <List
                 height={9000}
-                headerHeight={20}
-                rowHeight={30}
-                rowClassName={({ index }) => {
-                  if (index !== -1 && index % 2 === 0) {
-                    return "evenRow";
-                  } else if (index !== -1 && index % 2 === 1) {
-                    return "oddRow";
-                  }
-                }}
-                sort={this._sort}
-                sortBy={sortBy}
-                sortDirection={sortDirection}
-                rowCount={portfolio.length}
-                rowGetter={({ index }) => portfolio[index]}
+                itemCount={portfolio.length}
+                itemSize={30}
+                width={width}
               >
-                <Column
-                  className="stockName"
-                  width={300}
-                  label="Name"
-                  dataKey="Name"
-                  disableSort={false}
-                  cellRenderer={this.renderName}
-                />
-                <Column
-                  width={100}
-                  label="Price"
-                  dataKey="Security.regularMarketPrice"
-                  disableSort={false}
-                  cellDataGetter={({ rowData }) =>
-                    rowData.Security == null
-                      ? null
-                      : rowData.Security.regularMarketPrice
-                  }
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={100}
-                  label="Diff"
-                  dataKey="Diff"
-                  disableSort={false}
-                  cellDataGetter={({ rowData }) => rowData.getDayDiff()}
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={100}
-                  label="Shares"
-                  dataKey="NumberOfShares"
-                  disableSort={false}
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={150}
-                  label="Market Cost"
-                  dataKey="MarketCost"
-                  disableSort={false}
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={150}
-                  label="Market Price"
-                  dataKey="MarketPrice"
-                  disableSort={false}
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={150}
-                  label="Gain"
-                  dataKey="Gain"
-                  disableSort={false}
-                  cellDataGetter={({ rowData }) =>
-                    rowData.getGain(this.state.displayInEUR)
-                  }
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={150}
-                  label="Gain %"
-                  dataKey="GainPercent"
-                  disableSort={false}
-                  cellDataGetter={({ rowData }) => rowData.getGainDiff()}
-                  cellRenderer={this.renderPrice}
-                />
-                <Column
-                  width={150}
-                  label="Past Gain"
-                  dataKey="PastGain"
-                  disableSort={false}
-                  cellRenderer={this.renderPrice}
-                />
-              </Table>
+                {({ index, style }) => {
+                  const item = portfolio[index];
+                  return (
+                    <div style={{ ...style, display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+                      <div style={{ flex: '0 0 300px', padding: '5px' }}>{this.renderName(item, index)}</div>
+                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item, index)}</div>
+                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.getDayDiff(), 'Diff', item, index)}</div>
+                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.NumberOfShares, 'NumberOfShares', item, index)}</div>
+                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketCost, 'MarketCost', item, index)}</div>
+                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketPrice, 'MarketPrice', item, index)}</div>
+                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGain(this.state.displayInEUR), 'Gain', item, index)}</div>
+                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGainDiff(), 'GainPercent', item, index)}</div>
+                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.PastGain, 'PastGain', item, index)}</div>
+                    </div>
+                  );
+                }}
+              </List>
             )}
           </AutoSizer>
-          ,
         </div>
       </div>
     );
