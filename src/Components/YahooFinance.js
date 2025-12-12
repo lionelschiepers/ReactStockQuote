@@ -1,11 +1,10 @@
-import { Component } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
+import { Component, memo, useMemo, useCallback } from "react";
+import { List } from "react-window";
 import { withAuth0 } from "@auth0/auth0-react";
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
+import { CSVLink } from "react-csv";
 
-import { CSVLink /*, CSVDownload*/ } from "react-csv";
 
 class YahooFinance extends Component {
   constructor(props) {
@@ -28,6 +27,8 @@ class YahooFinance extends Component {
     this._sort = this._sort.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.renderPrice = this.renderPrice.bind(this);
+    this.renderName = this.renderName.bind(this);
+    this.RowComponent = this.RowComponent.bind(this);
   }
 
   componentDidMount() {
@@ -124,7 +125,7 @@ class YahooFinance extends Component {
     });
   }
 
-  renderPrice(cellData, dataKey, rowData, rowIndex) {
+  renderPrice(cellData, dataKey, rowData) {
     if (isNaN(cellData)) return <div />;
     let postData = "";
 
@@ -172,7 +173,11 @@ class YahooFinance extends Component {
     );
   }
 
-  renderName(rowData, rowIndex) {
+  handleCheck() {
+    this.setState({ displayInEUR: !this.state.displayInEUR });
+  }
+
+  renderName(rowData) {
     return (
       <a
         className="stockName"
@@ -185,9 +190,30 @@ class YahooFinance extends Component {
     );
   }
 
-  handleCheck() {
-    this.setState({ displayInEUR: !this.state.displayInEUR });
-    this.forceUpdate();
+  RowComponent({
+    index,
+    portfolio,
+    style
+  }) {
+    {
+      if (typeof portfolio === 'undefined')
+        return null;
+
+      const item = portfolio[index];
+      return (
+        <div style={{ ...(style || {}), display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+          <div style={{ flex: '0 0 300px', padding: '5px' }}>{this.renderName(item, index)}</div>
+          <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item, index)}</div>
+          <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.getDayDiff(), 'Diff', item, index)}</div>
+          <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.NumberOfShares, 'NumberOfShares', item, index)}</div>
+          <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketCost, 'MarketCost', item, index)}</div>
+          <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketPrice, 'MarketPrice', item, index)}</div>
+          <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGain(this.state.displayInEUR), 'Gain', item, index)}</div>
+          <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGainDiff(), 'GainPercent', item, index)}</div>
+          <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.PastGain, 'PastGain', item, index)}</div>
+        </div>
+      );
+    }
   }
 
   render() {
@@ -275,36 +301,128 @@ class YahooFinance extends Component {
               Past Gain {this.state.sortBy === 'PastGain' && this.state.sortDirection === 'ASC' ? '↑' : this.state.sortBy === 'PastGain' && this.state.sortDirection === 'DESC' ? '↓' : ''}
             </div>
           </div>
-          <AutoSizer disableHeight>
-            {({ width }) => (
-              <List
-                height={9000}
-                itemCount={portfolio.length}
-                itemSize={30}                layout="vertical"                width={width}
-              >
-                {({ index, style }) => {
-                  const item = portfolio[index];
-                  return (
-                    <div style={{ ...(style || {}), display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
-                      <div style={{ flex: '0 0 300px', padding: '5px' }}>{this.renderName(item, index)}</div>
-                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item, index)}</div>
-                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.getDayDiff(), 'Diff', item, index)}</div>
-                      <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.NumberOfShares, 'NumberOfShares', item, index)}</div>
-                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketCost, 'MarketCost', item, index)}</div>
-                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.MarketPrice, 'MarketPrice', item, index)}</div>
-                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGain(this.state.displayInEUR), 'Gain', item, index)}</div>
-                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.getGainDiff(), 'GainPercent', item, index)}</div>
-                      <div style={{ flex: '0 0 150px', padding: '5px' }}>{this.renderPrice(item.PastGain, 'PastGain', item, index)}</div>
-                    </div>
-                  );
-                }}
-              </List>
-            )}
-          </AutoSizer>
+          <List
+            rowComponent={MemoizedRowComponent}
+            rowCount={this.state.portfolio.length}
+            rowHeight={25}
+            rowProps={ { portfolio: this.state.portfolio, displayInEUR: this.state.displayInEUR } }
+          />
         </div>
       </div>
     );
   }
 }
+
+// Optimized RowComponent with memoization and performance improvements
+const MemoizedRowComponent = memo(({ index, portfolio, style, displayInEUR }) => {
+  if (typeof portfolio === 'undefined' || index >= portfolio.length) return null;
+
+  const item = portfolio[index];
+
+  // Cache the item reference to prevent unnecessary recalculations
+  const cachedItem = useMemo(() => item, [item]);
+
+  // Optimized renderPrice function with early returns and reduced calculations
+  const renderPrice = useCallback((cellData, dataKey, rowData) => {
+    // Early exit for invalid data
+    if (isNaN(cellData) || rowData == null) return <div />;
+
+    let postData = "";
+    let finalValue = cellData;
+
+    // Handle different data types with minimal branching
+    switch (dataKey) {
+      case "Security.regularMarketPrice":
+        if (rowData.Security != null && cellData != null) {
+          postData = rowData.Currency;
+        }
+        break;
+
+      case "NumberOfShares":
+        return <div>{cellData == null ? "" : cellData.toFixed(0)}</div>;
+
+      case "Diff":
+        if (rowData.Security != null) {
+          const price = rowData.Security.regularMarketPrice;
+          const previousPrice = rowData.Security.regularMarketPreviousClose;
+          if (price != null && previousPrice != null) {
+            finalValue = 100.0 * (price / previousPrice - 1.0);
+            postData = "%";
+          } else {
+            return <div />;
+          }
+        }
+        break;
+
+      case "GainPercent":
+        postData = "%";
+        break;
+
+      case "MarketCost":
+      case "MarketPrice":
+      case "PastGain":
+        if (displayInEUR) {
+          finalValue = rowData[`${dataKey}EUR`];
+        }
+        break;
+    }
+
+    // Handle zero values
+    if ((dataKey === "MarketCost" || dataKey === "MarketPrice") && finalValue === 0) {
+      finalValue = null;
+    }
+
+    // Format the final value
+    return (
+      <div>
+        {finalValue == null ? "" : finalValue.toFixed(2)} {postData}
+      </div>
+    );
+  }, [displayInEUR]);
+
+  // Simple renderName function
+  const renderName = useCallback((rowData) => {
+    return (
+      <a
+        className="stockName"
+        target="_blank"
+        rel="noopener noreferrer"
+        href={`https://finance.yahoo.com/quote/${rowData.Ticker}`}
+      >
+        {rowData.Name}
+      </a>
+    );
+  }, []);
+
+  // Pre-calculate values that depend on displayInEUR to avoid recalculations
+  const marketCostValue = displayInEUR ? cachedItem.MarketCostEUR : cachedItem.MarketCost;
+  const marketPriceValue = displayInEUR ? cachedItem.MarketPriceEUR : cachedItem.MarketPrice;
+  const pastGainValue = displayInEUR ? cachedItem.PastGainEUR : cachedItem.PastGain;
+  const gainValue = cachedItem.getGain(displayInEUR);
+  const gainDiffValue = cachedItem.getGainDiff();
+
+  return useMemo(() => (
+    <div style={{ ...(style || {}), display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+      <div style={{ flex: '0 0 300px', padding: '5px' }}>{renderName(cachedItem)}</div>
+      <div style={{ flex: '0 0 100px', padding: '5px' }}>{renderPrice(cachedItem.Security?.regularMarketPrice, 'Security.regularMarketPrice', cachedItem)}</div>
+      <div style={{ flex: '0 0 100px', padding: '5px' }}>{renderPrice(cachedItem.getDayDiff(), 'Diff', cachedItem)}</div>
+      <div style={{ flex: '0 0 100px', padding: '5px' }}>{renderPrice(cachedItem.NumberOfShares, 'NumberOfShares', cachedItem)}</div>
+      <div style={{ flex: '0 0 150px', padding: '5px' }}>{renderPrice(marketCostValue, 'MarketCost', cachedItem)}</div>
+      <div style={{ flex: '0 0 150px', padding: '5px' }}>{renderPrice(marketPriceValue, 'MarketPrice', cachedItem)}</div>
+      <div style={{ flex: '0 0 150px', padding: '5px' }}>{renderPrice(gainValue, 'Gain', cachedItem)}</div>
+      <div style={{ flex: '0 0 150px', padding: '5px' }}>{renderPrice(gainDiffValue, 'GainPercent', cachedItem)}</div>
+      <div style={{ flex: '0 0 150px', padding: '5px' }}>{renderPrice(pastGainValue, 'PastGain', cachedItem)}</div>
+    </div>
+  ), [index, style, displayInEUR, cachedItem, renderPrice, renderName, marketCostValue, marketPriceValue, pastGainValue, gainValue, gainDiffValue]);
+}, (prevProps, nextProps) => {
+  // Custom comparison function to prevent unnecessary re-renders
+  // Only re-render if displayInEUR changes or the specific item changes
+  return (
+    prevProps.displayInEUR === nextProps.displayInEUR &&
+    prevProps.index === nextProps.index &&
+    prevProps.portfolio[prevProps.index] === nextProps.portfolio[nextProps.index] &&
+    prevProps.style?.top === nextProps.style?.top
+  );
+});
 
 export default withAuth0(YahooFinance);
