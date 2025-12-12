@@ -1,6 +1,5 @@
 // import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Container } from "reactstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import Loading from "./Components/Loading";
@@ -24,14 +23,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div id="app" className="d-flex flex-column">
+      <div id="app" className="flex flex-col min-h-screen">
         <NavBar />
-        <Container fluid className="flex-grow-1">
+        <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="profile" element={<Profile />} />
           </Routes>
-        </Container>
+        </div>
       </div>
     </BrowserRouter>
   );

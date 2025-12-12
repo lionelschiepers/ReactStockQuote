@@ -7,8 +7,6 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { getConfig } from "./config";
 import { createRoot } from 'react-dom/client';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 const onRedirectCallback = (appState) => {
 //  myHistory.push(

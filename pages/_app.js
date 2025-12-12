@@ -1,6 +1,5 @@
 import '../src/index.css';
 import '../src/Components/YahooFinance.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Auth0Provider } from "@auth0/auth0-react";
 import { getConfig } from "../src/config";

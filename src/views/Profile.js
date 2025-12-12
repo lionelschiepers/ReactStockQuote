@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Row, Col } from "reactstrap";
 
 import Highlight from "../Components/Highlight";
 import Loading from "../Components/Loading";
@@ -9,24 +8,24 @@ export const ProfileComponent = () => {
   const { user } = useAuth0();
 
   return (
-    <Container>
-      <Row className="align-items-center profile-header text-center">
-        <Col>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex flex-col items-center profile-header text-center mb-8">
+        <div className="mb-4">
           <img
             src={user.picture}
             alt="Profile"
-            className="rounded-circle img-fluid profile-picture"
+            className="rounded-full w-32 h-32 object-cover profile-picture"
           />
-        </Col>
-        <Col>
-          <h2>{user.name}</h2>
-          <p className="lead text-muted">{user.email}</p>
-        </Col>
-      </Row>
-      <Row>
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
+          <p className="text-gray-600">{user.email}</p>
+        </div>
+      </div>
+      <div>
         <Highlight>{JSON.stringify(user, null, 2)}</Highlight>
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 };
 
