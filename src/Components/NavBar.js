@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink as RouterNavLink } from "react-router-dom";
+import Link from "next/link";
 
 import {
   Collapse,
@@ -37,14 +37,9 @@ const NavBar = () => {
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <NavLink
-                  tag={RouterNavLink}
-                  to="/"
-                   
-                  className="router-link-exact-active"                  
-                >
-                  Home
-                </NavLink>
+                <Link href="/" legacyBehavior>
+                  <a className="nav-link">Home</a>
+                </Link>
               </NavItem>
             </Nav>
             <Nav className="d-none d-md-block" navbar>
@@ -72,13 +67,11 @@ const NavBar = () => {
                   </DropdownToggle>
                   <DropdownMenu>
                     <DropdownItem header>{user.name}</DropdownItem>
-                    <DropdownItem
-                      tag={RouterNavLink}
-                      to="/profile"
-                      className="dropdown-profile"
-                    >
-                      Profile
-                    </DropdownItem>
+                    <Link href="/profile" passHref>
+                      <DropdownItem className="dropdown-profile">
+                        Profile
+                      </DropdownItem>
+                    </Link>
                     <DropdownItem
                       id="qsLogoutBtn"
                       onClick={() => logoutWithRedirect()}
@@ -121,21 +114,16 @@ const NavBar = () => {
                   </span>
                 </NavItem>
                 <NavItem>
-                  <RouterNavLink
-                    to="/profile"
-                    className="router-link-exact-active"
-                  >
-                    Profile
-                  </RouterNavLink>
+                  <Link href="/profile" legacyBehavior>
+                    <a className="nav-link">Profile</a>
+                  </Link>
                 </NavItem>
                 <NavItem>
-                  <RouterNavLink
-                    to="#"
-                    id="qsLogoutBtn"
+                  <NavLink
                     onClick={() => logoutWithRedirect()}
                   >
                     Log out
-                  </RouterNavLink>
+                  </NavLink>
                 </NavItem>
               </Nav>
             )}

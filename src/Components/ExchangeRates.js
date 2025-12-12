@@ -8,7 +8,7 @@ class Cache
 // i.e: let rate = await GetRate('USD', 'EUR')
 export async function GetRate(from, to)
 {
-    const url = process.env.REACT_APP_EXCHANGE_RATES_URL;
+    const url = process.env.NEXT_PUBLIC_EXCHANGE_RATES_URL;
 
     if (Cache.Rates == null)
     {

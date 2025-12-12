@@ -4,7 +4,6 @@ import { FixedSizeList as List } from "react-window";
 import { withAuth0 } from "@auth0/auth0-react";
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
-import "./YahooFinance.css";
 
 import { CSVLink /*, CSVDownload*/ } from "react-csv";
 

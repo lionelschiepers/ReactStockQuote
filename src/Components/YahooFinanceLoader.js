@@ -6,7 +6,8 @@ import _ from 'lodash';
 function getUrl(quotes, fields) {
   if (!_.isArray(quotes)) quotes = [quotes];
 
-  let url = process.env.REACT_APP_YAHOO_URL + "?symbols=" + _.join(quotes, ",");
+//  let url = process.env.REACT_APP_YAHOO_URL + "?symbols=" + _.join(quotes, ",");
+  let url = process.env.NEXT_PUBLIC_YAHOO_URL + "?symbols=" + _.join(quotes, ",");
   if (fields == null) return url;
 
   return url + "&fields=" + _.join(fields, ",");

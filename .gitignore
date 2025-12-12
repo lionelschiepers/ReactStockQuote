@@ -13,6 +13,10 @@
 # production
 /build
 
+# Next.js
+.next/
+out/
+
 # misc
 .DS_Store
 .env.local
@@ -25,3 +29,20 @@ yarn-debug.log*
 yarn-error.log*
 
 *.bak
+.fake
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
