@@ -27,8 +27,8 @@ RUN npm run build
 
 FROM nginx:alpine AS production
 
-RUN apk update
-RUN apk upgrade --no-interactive --no-progress
+# Install a small HTTP client for the healthcheck. Avoid full update/upgrade to keep image small.
+RUN apk add --no-cache curl
 
 # Copy the built application from the builder stage
 COPY --from=builder /app/build /usr/share/nginx/html
@@ -38,8 +38,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Expose port 80
 EXPOSE 80
 
-# simple HTTP healthcheck (uses wget from busybox)
+# simple HTTP healthcheck (uses curl)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget -q --spider http://localhost:80/ || exit 1
+  CMD curl -f http://localhost:80/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

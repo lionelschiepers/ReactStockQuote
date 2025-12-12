@@ -7,8 +7,9 @@
 # FROM mcr.microsoft.com/azure-functions/node:4-node22-appservice
 FROM mcr.microsoft.com/azure-functions/node:4-node24
 
-RUN apt-get update
-RUN apt-get upgrade -y
+# Update package index and install a small HTTP client for healthchecks.
+# Avoid running a full `apt-get upgrade` in the image to keep builds deterministic and small.
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot
 ENV AzureFunctionsJobHost__Logging__Console__IsEnabled=true
@@ -27,5 +28,9 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 # Copy the rest of the code
 COPY . .
 RUN  npm run build
+
+# basic HTTP healthcheck for the functions host
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+	CMD curl -f http://localhost:80/api/exchange-rate-ecb || exit 1
 
 EXPOSE 80
