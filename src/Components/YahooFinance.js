@@ -281,13 +281,12 @@ class YahooFinance extends Component {
               <List
                 height={9000}
                 itemCount={portfolio.length}
-                itemSize={30}
-                width={width}
+                itemSize={30}                layout="vertical"                width={width}
               >
                 {({ index, style }) => {
                   const item = portfolio[index];
                   return (
-                    <div style={{ ...style, display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+                    <div style={{ ...(style || {}), display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
                       <div style={{ flex: '0 0 300px', padding: '5px' }}>{this.renderName(item, index)}</div>
                       <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item, index)}</div>
                       <div style={{ flex: '0 0 100px', padding: '5px' }}>{this.renderPrice(item.getDayDiff(), 'Diff', item, index)}</div>
