@@ -18,9 +18,8 @@
     "@auth0/auth0-react": "^2.11.0",
     "axios": "^1.13.2",
     "gh-pages": "^6.3.0",
-    "helmet": "^3.23.3",
     "highlight.js": "^11.11.1",
-    "http-proxy-middleware": "^3.0.0",
+
     "lodash": "^4.17.21",
     "next": "^16.0.10",
     "papaparse": "^5.5.3",
@@ -28,7 +27,6 @@
     "react-csv": "^2.0.3",
     "react-data-table-component": "^7.7.0",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^6.30.2",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11"
   },
@@ -57,6 +55,6 @@
     ]
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   }
 }
