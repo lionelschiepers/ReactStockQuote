@@ -19,16 +19,14 @@
     "axios": "^1.13.2",
     "gh-pages": "^6.3.0",
     "highlight.js": "^11.11.1",
-
     "lodash": "^4.17.21",
     "next": "^16.0.10",
     "papaparse": "^5.5.3",
     "react": "^19.2.3",
-    "react-csv": "^2.0.3",
-    "react-data-table-component": "^7.7.0",
+    "react-csv": "^2.2.2",
     "react-dom": "^19.2.3",
     "react-virtualized-auto-sizer": "^1.0.26",
-    "react-window": "^1.8.11"
+    "react-window": "^2.2.3"
   },
   "scripts": {
     "dev": "next dev",
