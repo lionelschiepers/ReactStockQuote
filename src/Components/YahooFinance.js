@@ -4,8 +4,7 @@ import { FixedSizeList as List } from "react-window";
 import { withAuth0 } from "@auth0/auth0-react";
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
-
-import { CSVLink /*, CSVDownload*/ } from "react-csv";
+import { CSVLink } from "react-csv";
 
 class YahooFinance extends Component {
   constructor(props) {
