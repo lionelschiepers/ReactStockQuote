@@ -3,9 +3,11 @@ build
 dist
 local.settings.json
 .git
-.env
+.env*
 npm-debug.log
 .DS_Store
 api
 .vscode
 .github
+.next
+out

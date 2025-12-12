@@ -3,8 +3,8 @@
 FROM node:lts-alpine AS builder
 
 # if API is behind a reverse proxy, use relative URLs
-ENV REACT_APP_YAHOO_URL=api/yahoo-finance
-ENV REACT_APP_EXCHANGE_RATES_URL=api/exchange-rate-ecb
+ENV NEXT_PUBLIC_EXCHANGE_RATES_URL=api/exchange-rate-ecb
+ENV NEXT_PUBLIC_YAHOO_URL=api/yahoo-finance
 
 # ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
 # ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb
@@ -31,7 +31,7 @@ FROM nginx:alpine AS production
 RUN apk add --no-cache curl
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/out /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
