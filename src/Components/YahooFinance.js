@@ -36,7 +36,7 @@ class YahooFinance extends Component {
     if (!isAuthenticated) return;
 
     let portfolioUri =
-      "https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/" +
+      "https://raw.githubusercontent.com/lionelschiepers/MyStock/main/MyStockWeb/Data/" +
       encodeURIComponent(user.email) +
       ".csv";
 
