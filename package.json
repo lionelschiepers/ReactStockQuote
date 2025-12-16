@@ -1,7 +1,7 @@
 {
-  "homepage": "./",
+  "homepage": "https://lionelschiepers.github.io/ReactStockQuote/",
   "name": "my-stock-quote",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
