@@ -18,7 +18,7 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
+            <div className="shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-gray-800">
                 Stock Quote
               </Link>
@@ -96,7 +96,7 @@ const NavBar = () => {
         <div className="pt-4 pb-3 border-t border-gray-200">
           {isAuthenticated && (
             <div className="flex items-center px-5">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <img className="h-10 w-10 rounded-full" src={user.picture} alt="Profile" />
               </div>
               <div className="ml-3">
