@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+.dark .App-link {
+  color: #61dafb;
+}
+
 .spinner {
   position: absolute;
   display: flex;
@@ -39,6 +43,10 @@
   bottom: 0;
   left: 0;
   right: 0;
+}
+
+.dark .spinner {
+  background-color: #0f172a;
 }
 
 @keyframes App-logo-spin {

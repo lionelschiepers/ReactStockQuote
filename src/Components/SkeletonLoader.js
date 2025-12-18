@@ -1,68 +1,6 @@
 import React from 'react';
 
 const SkeletonLoader = () => {
-  const styles = {
-    skeletonLoader: {
-      padding: '20px',
-      background: '#f8f9fa',
-      borderRadius: '8px',
-    },
-    loadingBanner: {
-      background: '#e5e5e5', 
-      color: '#666666', 
-      padding: '30px', 
-      textAlign: 'center', 
-      marginBottom: '20px',
-      borderRadius: '8px',
-      fontWeight: 'bold',
-      fontSize: '18px',
-      minHeight: '100px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      border: '1px solid #d0d0d0'
-    },
-    summaryContainer: {
-      display: 'flex', 
-      gap: '20px', 
-      marginBottom: '30px'
-    },
-    summaryCard: {
-      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)', 
-      backgroundSize: '200% 100%',
-      height: '80px', 
-      width: '200px', 
-      borderRadius: '8px',
-      animation: 'shimmer 1.5s infinite'
-    },
-    tablePlaceholder: {
-      background: '#fafafa', 
-      padding: '20px', 
-      borderRadius: '8px',
-      border: '1px solid #e0e0e0'
-    },
-    tableHeader: {
-      background: '#e5e5e5', 
-      height: '30px', 
-      marginBottom: '10px', 
-      borderRadius: '4px',
-      animation: 'shimmer 1.5s infinite'
-    },
-    tableRow: {
-      background: 'linear-gradient(90deg, #f8f8f8 25%, #e8e8e8 50%, #f8f8f8 75%)', 
-      backgroundSize: '200% 100%',
-      height: '40px', 
-      marginBottom: '8px', 
-      borderRadius: '4px',
-      animation: 'shimmer 1.5s infinite'
-    },
-    smallText: {
-      fontSize: '14px', 
-      marginTop: '10px', 
-      display: 'block'
-    }
-  };
-
   const shimmerAnimation = `
     @keyframes shimmer {
       0% {
@@ -75,29 +13,27 @@ const SkeletonLoader = () => {
   `;
 
   return (
-    <div style={styles.skeletonLoader}>
+    <div className="p-5 bg-white dark:bg-gray-900 rounded-lg">
       {/* Loading banner */}
-      <div style={styles.loadingBanner}>
+      <div className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 p-8 mb-5 rounded-lg font-bold text-lg min-h-[100px] flex items-center justify-center border border border-gray-200 dark:border-gray-600">
         Loading portfolio data
       </div>
 
       {/* Summary placeholder cards */}
-      <div style={styles.summaryContainer}>
-        <div style={styles.summaryCard}></div>
-        <div style={styles.summaryCard}></div>
-        <div style={styles.summaryCard}></div>
+      <div className="flex gap-5 mb-8">
+        <div className="h-20 w-52 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse"></div>
+        <div className="h-20 w-52 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse"></div>
+        <div className="h-20 w-52 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-lg animate-pulse"></div>
       </div>
 
       {/* Table placeholder */}
-      <div style={styles.tablePlaceholder}>
-        <div style={styles.tableHeader}></div>
+      <div className="bg-gray-50 dark:bg-gray-800 p-5 rounded-lg border border-gray-200 dark:border-gray-600">
+        <div className="h-8 mb-3 rounded bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse"></div>
         {[1, 2, 3, 4, 5].map(i => (
           <div 
             key={i} 
-            style={{ 
-              ...styles.tableRow, 
-              animation: `shimmer 1.5s infinite ${i * 0.1}s`
-            }}
+            className="h-10 mb-2 rounded bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-pulse"
+            style={{ animationDelay: `${i * 0.1}s` }}
           ></div>
         ))}
       </div>

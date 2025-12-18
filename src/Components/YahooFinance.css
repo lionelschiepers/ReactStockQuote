@@ -28,6 +28,33 @@ a.stockName:hover
     background-color: white;
 }
 
+/* Dark mode styles */
+.dark a.stockName:link
+{
+    color: #ffffff;
+}
+
+.dark a.stockName:visited
+{
+    color: #ffffff;
+}
+
+.dark a.stockName:hover
+{
+    color: #f1f5f9;
+    font-weight: bold;
+}
+
+.dark .oddRow
+{
+    background-color: #1e293b;
+}
+
+.dark .evenRow
+{
+    background-color: #334155;
+}
+
 /* Hide scrollbar for react-window List component and all its children */
 .react-window-list,
 .react-window-list > div,
@@ -57,3 +84,31 @@ a.stockName:hover
 .yahoo-finance-container {
     margin-bottom: 50px;
 }
+
+/* Fix for text alignment and overflow in table cells */
+.yahoo-finance-container .react-window-list > div {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    box-sizing: border-box;
+}
+
+/* Ensure text doesn't get cut off */
+.yahoo-finance-container .react-window-list > div > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    padding: 2px 0;
+}
+
+/* Specific fix for stock names to prevent text cutoff */
+.yahoo-finance-container .react-window-list > div > div:first-child {
+    padding: 2px 0 4px 0; /* Extra bottom padding for descenders */
+}
+
+
+
+
+
+

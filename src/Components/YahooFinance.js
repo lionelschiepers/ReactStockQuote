@@ -8,7 +8,7 @@ import SkeletonLoader from "./SkeletonLoader";
 
 const YahooFinance = () => {
   const { isAuthenticated, user } = useAuth0();
-  
+
   const [portfolio, setPortfolio] = useState([]);
   const [marketCost, setMarketCost] = useState(0);
   const [marketPrice, setMarketPrice] = useState(0);
@@ -32,14 +32,14 @@ const YahooFinance = () => {
       setMinDisplayTime(Date.now()); // Track when loading started
       try {
         const portfolioUri = `https://raw.githubusercontent.com/lionelschiepers/StockQuote.Portfolio/main/Portfolio/${encodeURIComponent(user.email)}.csv`;
-        
+
         const portfolioData = await Portfolio.Load(portfolioUri);
         setPortfolio(portfolioData);
 
         let totalMarketCost = 0;
         let totalMarketPrice = 0;
         let totalPastGain = 0;
-        
+
         portfolioData.forEach((position) => {
           totalPastGain += position.PastGainEUR;
 
@@ -209,30 +209,30 @@ const YahooFinance = () => {
     const gainDiffValue = item.getGainDiff();
 
     return (
-      <div style={{ ...(style || {}), display: 'flex' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
-        <div style={{ flex: '0 0 300px', padding: '5px' }}>{renderName(item)}</div>
-        <div style={{ flex: '0 0 100px', padding: '5px' }}>
+      <div style={{ ...(style || {}), display: 'flex', alignItems: 'center' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+        <div style={{ flex: '0 0 300px', padding: '6px 5px' }}>{renderName(item)}</div>
+        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
           {renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item)}
         </div>
-        <div style={{ flex: '0 0 100px', padding: '5px' }}>
+        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
           {renderPrice(item.getDayDiff(), 'Diff', item)}
         </div>
-        <div style={{ flex: '0 0 100px', padding: '5px' }}>
+        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
           {renderPrice(item.NumberOfShares, 'NumberOfShares', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '5px' }}>
+        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
           {renderPrice(marketCostValue, 'MarketCost', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '5px' }}>
+        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
           {renderPrice(marketPriceValue, 'MarketPrice', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '5px' }}>
+        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
           {renderPrice(gainValue, 'Gain', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '5px' }}>
+        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
           {renderPrice(gainDiffValue, 'GainPercent', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '5px' }}>
+        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
           {renderPrice(pastGainValue, 'PastGain', item)}
         </div>
       </div>
@@ -267,96 +267,148 @@ const YahooFinance = () => {
   }
 
   return (
-    <div className="yahoo-finance-container">
-      <div style={{ textAlign: "left" }}>
-        <table style={{ width: "100%" }}>
-          <tbody>
-            <tr>
-              <td>
-                Market Price:{" "}
+    <div className="yahoo-finance-container bg-white dark:bg-gray-800 p-4 rounded-lg">
+      <div className="text-left mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="text-gray-900 dark:text-white">
+              Market Price:{" "}
+              <span className="font-semibold">
                 {marketPrice.toLocaleString("fr-BE", {
                   style: "currency",
                   currency: "EUR",
                 })}
-                <br />
-                Market Cost:{" "}
+              </span>
+            </div>
+            <div className="text-gray-900 dark:text-white">
+              Market Cost:{" "}
+              <span className="font-semibold">
                 {marketCost.toLocaleString("fr-BE", {
                   style: "currency",
                   currency: "EUR",
                 })}
-                <br />
-                Total Gain: {(gain * 100.0).toFixed(2)}%
-                <br />
-                Day diff: {(dayDiff * 100.0).toFixed(2)}%
-                <br />
-                Past Gain:{" "}
+              </span>
+            </div>
+            <div className="text-gray-900 dark:text-white">
+              Total Gain: <span className="font-semibold">{(gain * 100.0).toFixed(2)}%</span>
+            </div>
+            <div className="text-gray-900 dark:text-white">
+              Day diff: <span className="font-semibold">{(dayDiff * 100.0).toFixed(2)}%</span>
+            </div>
+            <div className="text-gray-900 dark:text-white">
+              Past Gain:{" "}
+              <span className="font-semibold">
                 {pastGain.toLocaleString("fr-BE", {
                   style: "currency",
                   currency: "EUR",
                 })}
-                <br />
-                Dividend Yield: {dividendYield.toFixed(2)}% (
+              </span>
+            </div>
+            <div className="text-gray-900 dark:text-white">
+              Dividend Yield: <span className="font-semibold">{dividendYield.toFixed(2)}%</span> (
+              <span className="font-semibold">
                 {dividendRate.toLocaleString("fr-BE", {
                   style: "currency",
                   currency: "EUR",
                 })}
-                )
-              </td>
-              <td style={{ textAlign: "right", verticalAlign: "top" }}>
-                <CSVLink data={portfolio}>Download data</CSVLink>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <br />
-      </div>
-      <div style={{ textAlign: "left" }}>
-        <input
-          type="checkbox"
-          onChange={handleCheck}
-          checked={displayInEUR}
-        />{" "}
-        Display in EUR
-      </div>
-      <div>
-        <div style={{ display: 'flex', fontWeight: 'bold', borderBottom: '1px solid #ccc' }}>
-          <div style={{ flex: '0 0 300px', padding: '5px' }} onClick={createSortHandler('Name')}>
-            Name {getSortIndicator('Name')}
+              </span>
+              )
+            </div>
           </div>
-          <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={createSortHandler('Security.regularMarketPrice')}>
-            Price {getSortIndicator('Security.regularMarketPrice')}
-          </div>
-          <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={createSortHandler('Diff')}>
-            Diff {getSortIndicator('Diff')}
-          </div>
-          <div style={{ flex: '0 0 100px', padding: '5px' }} onClick={createSortHandler('NumberOfShares')}>
-            Shares {getSortIndicator('NumberOfShares')}
-          </div>
-          <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={createSortHandler('MarketCost')}>
-            Market Cost {getSortIndicator('MarketCost')}
-          </div>
-          <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={createSortHandler('MarketPrice')}>
-            Market Price {getSortIndicator('MarketPrice')}
-          </div>
-          <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={createSortHandler('Gain')}>
-            Gain {getSortIndicator('Gain')}
-          </div>
-          <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={createSortHandler('GainPercent')}>
-            Gain % {getSortIndicator('GainPercent')}
-          </div>
-          <div style={{ flex: '0 0 150px', padding: '5px' }} onClick={createSortHandler('PastGain')}>
-            Past Gain {getSortIndicator('PastGain')}
+          <div className="text-right">
+            <CSVLink
+              data={portfolio}
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Download data
+            </CSVLink>
           </div>
         </div>
-        <List
-          className="react-window-list"
-          rowComponent={RowComponent}
-          rowCount={portfolio.length}
-          rowHeight={25}
-          height={600}
-          rowProps={{ portfolio, displayInEUR }}
-        />
       </div>
+      <div className="text-left mb-4">
+        <label className="flex items-center space-x-2 cursor-pointer">
+          <input
+            type="checkbox"
+            onChange={handleCheck}
+            checked={displayInEUR}
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <span className="text-gray-700 dark:text-gray-300">Display in EUR</span>
+        </label>
+      </div>
+      <div className="flex font-bold border-b border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white">
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 300px' }}
+          onClick={createSortHandler('Name')}
+        >
+          Name {getSortIndicator('Name')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 100px' }}
+          onClick={createSortHandler('Security.regularMarketPrice')}
+        >
+          Price {getSortIndicator('Security.regularMarketPrice')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 100px' }}
+          onClick={createSortHandler('Diff')}
+        >
+          Diff {getSortIndicator('Diff')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 100px' }}
+          onClick={createSortHandler('NumberOfShares')}
+        >
+          Shares {getSortIndicator('NumberOfShares')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 150px' }}
+          onClick={createSortHandler('MarketCost')}
+        >
+          Market Cost {getSortIndicator('MarketCost')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 150px' }}
+          onClick={createSortHandler('MarketPrice')}
+        >
+          Market Price {getSortIndicator('MarketPrice')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 150px' }}
+          onClick={createSortHandler('Gain')}
+        >
+          Gain {getSortIndicator('Gain')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 150px' }}
+          onClick={createSortHandler('GainPercent')}
+        >
+          Gain % {getSortIndicator('GainPercent')}
+        </div>
+        <div
+          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+          style={{ flex: '0 0 150px' }}
+          onClick={createSortHandler('PastGain')}
+        >
+          Past Gain {getSortIndicator('PastGain')}
+        </div>
+      </div>
+      <List
+        className="react-window-list"
+        rowComponent={RowComponent}
+        rowCount={portfolio.length}
+        rowHeight={32}
+        height={600}
+        rowProps={{ portfolio, displayInEUR }}
+      />
     </div>
   );
 };
