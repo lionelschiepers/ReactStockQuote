@@ -302,9 +302,11 @@ class YahooFinance extends Component {
             </div>
           </div>
           <List
+            className="react-window-list"
             rowComponent={MemoizedRowComponent}
             rowCount={this.state.portfolio.length}
             rowHeight={25}
+            height={600}
             rowProps={ { portfolio: this.state.portfolio, displayInEUR: this.state.displayInEUR } }
           />
         </div>

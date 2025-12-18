@@ -27,3 +27,28 @@ a.stockName:hover
 {
     background-color: white;
 }
+
+/* Hide scrollbar for react-window List component and all its children */
+.react-window-list,
+.react-window-list > div,
+.react-window-list > div > div {
+    overflow: hidden !important;
+    scrollbar-width: none !important;  /* Firefox */
+    -ms-overflow-style: none !important;  /* IE and Edge */
+}
+
+/* Hide webkit scrollbars completely */
+.react-window-list::-webkit-scrollbar,
+.react-window-list > div::-webkit-scrollbar,
+.react-window-list > div > div::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+}
+
+/* Ensure no scrollbar appears in any browser */
+.react-window-list * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
