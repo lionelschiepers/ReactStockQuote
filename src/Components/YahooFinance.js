@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import _ from "lodash";
 import { Portfolio } from "./Portfolio";
 import { CSVLink } from "react-csv";
+import SkeletonLoader from "./SkeletonLoader";
 
 const YahooFinance = () => {
   const { isAuthenticated, user } = useAuth0();
@@ -20,6 +21,7 @@ const YahooFinance = () => {
   const [sortDirection, setSortDirection] = useState(null);
   const [displayInEUR, setDisplayInEUR] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [minDisplayTime, setMinDisplayTime] = useState(Date.now()); // Initialize with current time
 
   // Load portfolio data when component mounts or user changes
   useEffect(() => {
@@ -27,6 +29,7 @@ const YahooFinance = () => {
 
     const loadPortfolio = async () => {
       setIsLoading(true);
+      setMinDisplayTime(Date.now()); // Track when loading started
       try {
         const portfolioUri = `https://raw.githubusercontent.com/lionelschiepers/StockQuote.Portfolio/main/Portfolio/${encodeURIComponent(user.email)}.csv`;
         
@@ -63,7 +66,13 @@ const YahooFinance = () => {
       } catch (error) {
         console.error('Failed to load portfolio:', error);
       } finally {
-        setIsLoading(false);
+        // Ensure skeleton shows for at least 2 seconds
+        const loadTime = Date.now() - minDisplayTime;
+        if (loadTime < 2000) {
+          setTimeout(() => setIsLoading(false), 2000 - loadTime);
+        } else {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -254,7 +263,7 @@ const YahooFinance = () => {
   }, [sortBy, sortDirection, handleSort]);
 
   if (isLoading) {
-    return <div>Loading portfolio data...</div>;
+    return <SkeletonLoader />;
   }
 
   return (
