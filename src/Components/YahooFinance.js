@@ -220,7 +220,7 @@ class YahooFinance extends Component {
     const { portfolio } = this.state;
 
     return (
-      <div>
+      <div className="yahoo-finance-container">
         <div style={{ textAlign: "left" }}>
           <table style={{ width: "100%" }}>
             <tbody>
