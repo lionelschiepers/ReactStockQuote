@@ -129,6 +129,17 @@ const YahooFinance = () => {
     setSortDirection(direction);
   }, [portfolio, internalSort]);
 
+  // Helper function to format values in K€ with French dot separators
+  const formatInKEur = useCallback((value) => {
+    if (value == null || isNaN(value)) return '';
+    const kValue = value / 1000;
+    // Format with French locale and replace spaces with dots, then add K€
+    return kValue.toLocaleString('fr-FR', { 
+      minimumFractionDigits: 0, 
+      maximumFractionDigits: 0 
+    }).replace(' ', '.') + ' K€';
+  }, []);
+
   // Price rendering function
   const renderPrice = useCallback((cellData, dataKey, rowData) => {
     if (isNaN(cellData)) return <div />;
@@ -274,19 +285,13 @@ const YahooFinance = () => {
             <div className="text-gray-900 dark:text-white">
               Market Price:{" "}
               <span className="font-semibold">
-                {marketPrice.toLocaleString("fr-BE", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
+                {formatInKEur(marketPrice)}
               </span>
             </div>
             <div className="text-gray-900 dark:text-white">
               Market Cost:{" "}
               <span className="font-semibold">
-                {marketCost.toLocaleString("fr-BE", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
+                {formatInKEur(marketCost)}
               </span>
             </div>
             <div className="text-gray-900 dark:text-white">
@@ -298,19 +303,13 @@ const YahooFinance = () => {
             <div className="text-gray-900 dark:text-white">
               Past Gain:{" "}
               <span className="font-semibold">
-                {pastGain.toLocaleString("fr-BE", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
+                {formatInKEur(pastGain)}
               </span>
             </div>
             <div className="text-gray-900 dark:text-white">
               Dividend Yield: <span className="font-semibold">{dividendYield.toFixed(2)}%</span> (
               <span className="font-semibold">
-                {dividendRate.toLocaleString("fr-BE", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
+                {formatInKEur(dividendRate)}
               </span>
               )
             </div>
