@@ -82,6 +82,16 @@ const YahooFinance = () => {
   // Sort functionality
   const internalSort = useCallback((list, sortByField, direction) => {
     let orderedList = _.sortBy(list, (p) => {
+      // For Name sorting, don't apply special handling for zero shares
+      if (sortByField === "Name") {
+        return p.Name.toLowerCase(); // Normal name sorting
+      }
+
+      // For all other fields, put zero shares at the end
+      if (p.NumberOfShares === 0 && sortByField !== "Name") {
+        return direction === "DESC" ? -Infinity : Infinity;
+      }
+
       if (sortByField === "Security.regularMarketPrice") {
         return p.Security?.regularMarketPrice || 0;
       }
@@ -180,9 +190,22 @@ const YahooFinance = () => {
       cellData = null;
     }
 
+    // Format Market Cost, Market Price, and Gain columns with separators but no decimals
+    const shouldRemoveDecimals = dataKey === "MarketCost" || dataKey === "MarketPrice" || dataKey === "Gain";
+    
+    let displayValue = "";
+    if (cellData != null) {
+      if (shouldRemoveDecimals) {
+        // Use toLocaleString to add separators, then remove any decimal part
+        displayValue = Math.round(cellData).toLocaleString('fr-FR');
+      } else {
+        displayValue = cellData.toFixed(2).replace('.', ','); // French decimal format
+      }
+    }
+    
     return (
       <div>
-        {cellData == null ? "" : cellData.toFixed(2)} {postData}
+        {displayValue} {postData}
       </div>
     );
   }, [displayInEUR]);
