@@ -2,19 +2,20 @@ div.stockName {
     text-align: left;
   }
 
+/* Light mode - dark color instead of blue */
 a.stockName:link
 {
-    color:blue;
+    color:#333333;
 }
 
 a.stockName:visited
 {
-    color:blue;
+    color:#333333;
 }
 
 a.stockName:hover
 {
-    color:red;
+    color:#000000;
     font-weight: bold;
 }
 
