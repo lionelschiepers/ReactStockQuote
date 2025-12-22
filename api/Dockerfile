@@ -7,6 +7,8 @@
 # FROM mcr.microsoft.com/azure-functions/node:4-node22-appservice
 FROM mcr.microsoft.com/azure-functions/node:4-node24
 
+ENV NODE_ENV=production
+
 # Update package index and install a small HTTP client for healthchecks.
 # Avoid running a full `apt-get upgrade` in the image to keep builds deterministic and small.
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
