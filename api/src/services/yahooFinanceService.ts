@@ -15,7 +15,7 @@ export class YahooFinanceService {
   private yahooFinance: any;
 
   constructor() {
-    this.yahooFinance = new YahooFinance();
+    this.yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
   }
 
   async getQuotes(request: YahooFinanceQuoteRequest, context: InvocationContext): Promise<YahooFinanceResponse> {
