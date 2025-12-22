@@ -1,4 +1,3 @@
-import _ from "lodash";
 import papa from "papaparse";
 import axios from "axios";
 import { GetRate } from "./ExchangeRates";
@@ -86,7 +85,7 @@ class SecurityPostion {
 }
 
 class CurrencyHelper {
-  // sets the currency of the positions using the market.
+  // sets currency of positions using market.
   static async updateCurrency(positions) {
     for (let i = 0; i < positions.length; i++) {
       let position = positions[i];
@@ -144,7 +143,7 @@ export class Portfolio {
     return dayGain / previousDayMarketPrice;
   }
 
-  // Loads the specified transactions file
+  // Loads specified transactions file
   // sample file: https://raw.githubusercontent.com/lionelschiepers/MyStock/master/MyStockWeb/Data/1.csv
   static async Load(url) {
     const result = [];
@@ -173,9 +172,9 @@ export class Portfolio {
             break;
 
           case "sell":
-            // calculate the past gain with the last transactions.
+            // calculate past gain with last transactions.
             while (data.Shares > 0) {
-              let lastTransaction = _.last(item.Transactions);
+              let lastTransaction = item.Transactions[item.Transactions.length - 1];
               let x = Math.min(lastTransaction.Shares, data.Shares);
               item.MarketCost -=
                 x * lastTransaction.Price + lastTransaction.Commission;

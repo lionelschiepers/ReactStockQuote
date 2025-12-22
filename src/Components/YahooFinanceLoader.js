@@ -1,16 +1,24 @@
 import axios from 'axios';
-import _ from 'lodash';
+
+// Native JavaScript helper function to chunk arrays
+function chunk(array, size) {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+}
 
 // const anyCorsHttp = axios.create();
 
 function getUrl(quotes, fields) {
-  if (!_.isArray(quotes)) quotes = [quotes];
+  if (!Array.isArray(quotes)) quotes = [quotes];
 
-//  let url = process.env.REACT_APP_YAHOO_URL + "?symbols=" + _.join(quotes, ",");
-  let url = process.env.NEXT_PUBLIC_YAHOO_URL + "?symbols=" + _.join(quotes, ",");
+//  let url = process.env.REACT_APP_YAHOO_URL + "?symbols=" + quotes.join(",");
+  let url = process.env.NEXT_PUBLIC_YAHOO_URL + "?symbols=" + quotes.join(",");
   if (fields == null) return url;
 
-  return url + "&fields=" + _.join(fields, ",");
+  return url + "&fields=" + fields.join(",");
 }
 
 export const YahooFinanceFields = {
@@ -124,7 +132,7 @@ export class YahooFinanceLoader
       }
     }
 
-    let chunks = _.chunk(symbols, 50);
+    let chunks = chunk(symbols, 50);
     let urls= [];
     chunks.forEach((item, index, array) => {
       let url = getUrl(chunks[index], fields);

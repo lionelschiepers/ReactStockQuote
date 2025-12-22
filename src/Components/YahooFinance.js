@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { List } from "react-window";
 import { useAuth0 } from "@auth0/auth0-react";
-import _ from "lodash";
 import { Portfolio } from "./Portfolio";
 import { CSVLink } from "react-csv";
 import SkeletonLoader from "./SkeletonLoader";
@@ -81,49 +80,72 @@ const YahooFinance = () => {
 
   // Sort functionality
   const internalSort = useCallback((list, sortByField, direction) => {
-    let orderedList = _.sortBy(list, (p) => {
+    let orderedList = [...list].sort((a, b) => {
       // For Name sorting, don't apply special handling for zero shares
       if (sortByField === "Name") {
-        return p.Name.toLowerCase(); // Normal name sorting
+        const aName = a.Name.toLowerCase();
+        const bName = b.Name.toLowerCase();
+        return aName.localeCompare(bName);
       }
 
       // For all other fields, put zero shares at the end
-      if (p.NumberOfShares === 0 && sortByField !== "Name") {
+      if (a.NumberOfShares === 0 && sortByField !== "Name") {
         return direction === "DESC" ? -Infinity : Infinity;
       }
+      if (b.NumberOfShares === 0 && sortByField !== "Name") {
+        return direction === "DESC" ? Infinity : -Infinity;
+      }
+
+      let aValue, bValue;
 
       if (sortByField === "Security.regularMarketPrice") {
-        return p.Security?.regularMarketPrice || 0;
-      }
+        aValue = a.Security?.regularMarketPrice || 0;
+        bValue = b.Security?.regularMarketPrice || 0;
+      } else if (sortByField === "Diff") {
+        aValue = a.getDayDiff();
+        bValue = b.getDayDiff();
+        
+        if (a.NumberOfShares === 0) aValue = null;
+        if (b.NumberOfShares === 0) bValue = null;
 
-      if (sortByField === "Diff") {
-        let diff = p.getDayDiff();
-        if (p.NumberOfShares === 0) diff = null;
-
-        if (diff == null && direction === "DESC") {
-          diff = -100000000; // always at the bottom
+        if (aValue == null && direction === "DESC") {
+          aValue = -100000000; // always at the bottom
         }
-        return diff;
-      }
-
-      if (sortByField === "GainPercent") {
-        let diff = p.getGainDiff();
-        if (p.NumberOfShares === 0) diff = null;
-
-        if (diff == null && direction === "DESC") {
-          diff = -100000000; // always at the bottom
+        if (bValue == null && direction === "DESC") {
+          bValue = -100000000; // always at the bottom
         }
-        return diff;
+      } else if (sortByField === "GainPercent") {
+        aValue = a.getGainDiff();
+        bValue = b.getGainDiff();
+        
+        if (a.NumberOfShares === 0) aValue = null;
+        if (b.NumberOfShares === 0) bValue = null;
+
+        if (aValue == null && direction === "DESC") {
+          aValue = -100000000; // always at the bottom
+        }
+        if (bValue == null && direction === "DESC") {
+          bValue = -100000000; // always at the bottom
+        }
+      } else if (sortByField === "Gain") {
+        aValue = a.getGain(displayInEUR);
+        bValue = b.getGain(displayInEUR);
+      } else {
+        aValue = a[sortByField];
+        bValue = b[sortByField];
       }
 
-      if (sortByField === "Gain") {
-        return p.getGain(displayInEUR);
+      // Handle string comparisons
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return aValue.toLowerCase().localeCompare(bValue.toLowerCase());
       }
 
-      if (_.isString(p[sortByField])) {
-        return p[sortByField].toLowerCase(); // case insensitive sort
-      }
-      return p[sortByField];
+      // Handle null values
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return direction === "DESC" ? 1 : -1;
+      if (bValue == null) return direction === "DESC" ? -1 : 1;
+
+      return aValue - bValue;
     });
 
     if (direction === "DESC") {
@@ -190,7 +212,7 @@ const YahooFinance = () => {
       cellData = null;
     }
 
-    // Format Market Cost, Market Price, and Gain columns with separators but no decimals
+    // Format Market Cost, Market Price and Gain columns with separators but no decimals
     const shouldRemoveDecimals = dataKey === "MarketCost" || dataKey === "MarketPrice" || dataKey === "Gain";
     
     let displayValue = "";
@@ -243,7 +265,7 @@ const YahooFinance = () => {
     const gainDiffValue = item.getGainDiff();
 
     return (
-      <div style={{ ...(style || {}), display: 'flex', alignItems: 'center' }} className={index % 2 === 0 ? 'evenRow' : 'oddRow'}>
+      <div style={{ ...(style || {}), display: 'flex', alignItems: 'center' }} className={index %2 === 0 ? 'evenRow' : 'oddRow'}>
         <div style={{ flex: '0 0 300px', padding: '6px 5px' }}>{renderName(item)}</div>
         <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
           {renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item)}
