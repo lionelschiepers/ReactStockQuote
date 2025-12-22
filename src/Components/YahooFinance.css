@@ -83,7 +83,9 @@ a.stockName:hover
 
 /* Add space after the YahooFinance component */
 .yahoo-finance-container {
-    margin-bottom: 50px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom: 10px;
 }
 
 /* Fix for text alignment and overflow in table cells */
