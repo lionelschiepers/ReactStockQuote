@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Disallow all web crawlers from indexing this site
+# This prevents the site from appearing in search engine results
