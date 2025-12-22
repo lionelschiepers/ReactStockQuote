@@ -2,7 +2,7 @@ import '../styles/global.css';
 import '../styles/YahooFinance.css';
 
 import { Auth0Provider } from "@auth0/auth0-react";
-import { getConfig } from "../lib/config";
+import { getConfig } from "../lib/config/config";
 import NavBar from "../components/layout/NavBar";
 import { useState, useEffect } from 'react';
 
