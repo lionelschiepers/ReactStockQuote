@@ -1,5 +1,4 @@
 docker build -t lionelschiepers/stockquote-node-api -f .\Dockerfile .
-REM docker tag stockquote-node-api lionelschiepers/stockquote-node-api:latest
 docker push lionelschiepers/stockquote-node-api:latest
 
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nickfedor/watchtower --cleanup --run-once
