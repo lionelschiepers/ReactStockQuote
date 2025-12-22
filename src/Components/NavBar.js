@@ -26,7 +26,7 @@ const NavBar = ({ darkMode, toggleDarkMode }) => {
                     <polygon style={{fill:"#FFFFFF"}} points="512,102.313 276.031,330.281 212.656,266.906 0,471.578 512,471.578"></polygon>
                   </g>
                 </svg>
-                Stock Quote
+                Stock Quotes
               </Link>
             </div>
             <div className="hidden md:ml-6 md:flex md:space-x-8">
