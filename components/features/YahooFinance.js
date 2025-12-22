@@ -3,7 +3,7 @@ import { List } from "react-window";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Portfolio } from "./Portfolio";
 import { CSVLink } from "react-csv";
-import SkeletonLoader from "./SkeletonLoader";
+import SkeletonLoader from "../ui/SkeletonLoader";
 
 const YahooFinance = () => {
   const { isAuthenticated, user } = useAuth0();

@@ -1,9 +1,9 @@
-import '../src/index.css';
-import '../src/Components/YahooFinance.css';
+import '../styles/global.css';
+import '../styles/YahooFinance.css';
 
 import { Auth0Provider } from "@auth0/auth0-react";
-import { getConfig } from "../src/config";
-import NavBar from "../src/Components/NavBar";
+import { getConfig } from "../lib/config";
+import NavBar from "../components/layout/NavBar";
 import { useState, useEffect } from 'react';
 
 const config = getConfig();
