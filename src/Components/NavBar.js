@@ -22,8 +22,8 @@ const NavBar = ({ darkMode, toggleDarkMode }) => {
               <Link href="/" className="text-xl font-bold text-gray-800 dark:text-white flex items-center">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512" data-iconid="483083" data-svgname="Stock market" className="mr-2">
                   <g>
-                    <polygon style={{fill:"#FFFFFF"}} points="204.344,155.188 249.469,200.297 409.344,40.422 268.031,40.422 316.063,88.453 249.469,155.031 204.953,110.516 41.906,264.969 63.906,288.219 	"></polygon>
-                    <polygon style={{fill:"#FFFFFF"}} points="512,102.313 276.031,330.281 212.656,266.906 0,471.578 512,471.578 	"></polygon>
+                    <polygon style={{fill:"#FFFFFF"}} points="204.344,155.188 249.469,200.297 409.344,40.422 268.031,40.422 316.063,88.453 249.469,155.031 204.953,110.516 41.906,264.969 63.906,288.219"></polygon>
+                    <polygon style={{fill:"#FFFFFF"}} points="512,102.313 276.031,330.281 212.656,266.906 0,471.578 512,471.578"></polygon>
                   </g>
                 </svg>
                 Stock Quote
