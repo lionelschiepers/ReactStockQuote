@@ -86,6 +86,15 @@ a.stockName:hover
     margin-left:10px;
     margin-right:10px;
     margin-bottom: 10px;
+    overflow-x: auto;
+    max-width: calc(100vw - 20px);
+}
+
+/* Responsive table wrapper */
+.yahoo-finance-table-wrapper {
+    overflow-x: auto;
+    min-width: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Fix for text alignment and overflow in table cells */
@@ -94,6 +103,7 @@ a.stockName:hover
     align-items: center;
     min-height: 32px;
     box-sizing: border-box;
+    min-width: max-content;
 }
 
 /* Ensure text doesn't get cut off */
@@ -103,6 +113,7 @@ a.stockName:hover
     text-overflow: ellipsis;
     line-height: 1.2;
     padding: 2px 0;
+    min-width: 0;
 }
 
 /* Specific fix for stock names to prevent text cutoff */
@@ -110,8 +121,15 @@ a.stockName:hover
     padding: 2px 0 4px 0; /* Extra bottom padding for descenders */
 }
 
+/* Header row responsive styling */
+.yahoo-finance-container > div:nth-of-type(3) {
+    display: flex;
+    min-width: max-content;
+    overflow-x: auto;
+}
 
-
-
-
-
+/* Ensure headers and rows align */
+.yahoo-finance-container > div:nth-of-type(3) > div,
+.yahoo-finance-container .react-window-list > div > div {
+    flex-shrink: 0;
+}

@@ -5,6 +5,8 @@ FROM node:lts-alpine AS builder
 # if API is behind a reverse proxy, use relative URLs
 ENV NEXT_PUBLIC_EXCHANGE_RATES_URL=api/exchange-rate-ecb
 ENV NEXT_PUBLIC_YAHOO_URL=api/yahoo-finance
+ENV NEXT_PUBLIC_AUTH0_DOMAIN=dev-oh3skfd6.us.auth0.com
+ENV NEXT_PUBLIC_AUTH0_CLIENT_ID=IRO3ziJRgAvy03EjWdXpvrUgkdh9ameo
 
 # ENV REACT_APP_YAHOO_URL=https://stockquote-api.lionelschiepers.synology.me/api/yahoo-finance
 # ENV REACT_APP_EXCHANGE_RATES_URL=https://stockquote-api.lionelschiepers.synology.me/api/exchange-rate-ecb

@@ -265,30 +265,30 @@ const YahooFinance = () => {
     const gainDiffValue = item.getGainDiff();
 
     return (
-      <div style={{ ...(style || {}), display: 'flex', alignItems: 'center' }} className={index %2 === 0 ? 'evenRow' : 'oddRow'}>
-        <div style={{ flex: '0 0 300px', padding: '6px 5px' }}>{renderName(item)}</div>
-        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
+      <div style={{ ...(style || {}), display: 'flex', alignItems: 'center', minWidth: 'max-content' }} className={index %2 === 0 ? 'evenRow' : 'oddRow'}>
+        <div style={{ flex: '0 0 350px', minWidth: '200px', padding: '6px 5px' }}>{renderName(item)}</div>
+        <div style={{ flex: '0 0 110px', minWidth: '70px', padding: '6px 5px' }}>
           {renderPrice(item.Security?.regularMarketPrice, 'Security.regularMarketPrice', item)}
         </div>
-        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 80px', minWidth: '70px', padding: '6px 5px' }}>
           {renderPrice(item.getDayDiff(), 'Diff', item)}
         </div>
-        <div style={{ flex: '0 0 100px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 80px', minWidth: '70px', padding: '6px 5px' }}>
           {renderPrice(item.NumberOfShares, 'NumberOfShares', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 120px', minWidth: '100px', padding: '6px 5px' }}>
           {renderPrice(marketCostValue, 'MarketCost', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 130px', minWidth: '100px', padding: '6px 5px' }}>
           {renderPrice(marketPriceValue, 'MarketPrice', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 90px', minWidth: '90px', padding: '6px 5px' }}>
           {renderPrice(gainValue, 'Gain', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 90px', minWidth: '90px', padding: '6px 5px' }}>
           {renderPrice(gainDiffValue, 'GainPercent', item)}
         </div>
-        <div style={{ flex: '0 0 150px', padding: '6px 5px' }}>
+        <div style={{ flex: '0 0 120px', minWidth: '100px', padding: '6px 5px' }}>
           {renderPrice(pastGainValue, 'PastGain', item)}
         </div>
       </div>
@@ -380,79 +380,83 @@ const YahooFinance = () => {
           <span className="text-gray-700 dark:text-gray-300">Display in EUR</span>
         </label>
       </div>
-      <div className="flex font-bold border-b border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white">
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 300px' }}
-          onClick={createSortHandler('Name')}
-        >
-          Name {getSortIndicator('Name')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 100px' }}
-          onClick={createSortHandler('Security.regularMarketPrice')}
-        >
-          Price {getSortIndicator('Security.regularMarketPrice')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 100px' }}
-          onClick={createSortHandler('Diff')}
-        >
-          Diff {getSortIndicator('Diff')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 100px' }}
-          onClick={createSortHandler('NumberOfShares')}
-        >
-          Shares {getSortIndicator('NumberOfShares')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 150px' }}
-          onClick={createSortHandler('MarketCost')}
-        >
-          Market Cost {getSortIndicator('MarketCost')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 150px' }}
-          onClick={createSortHandler('MarketPrice')}
-        >
-          Market Price {getSortIndicator('MarketPrice')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 150px' }}
-          onClick={createSortHandler('Gain')}
-        >
-          Gain {getSortIndicator('Gain')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 150px' }}
-          onClick={createSortHandler('GainPercent')}
-        >
-          Gain % {getSortIndicator('GainPercent')}
-        </div>
-        <div
-          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
-          style={{ flex: '0 0 150px' }}
-          onClick={createSortHandler('PastGain')}
-        >
-          Past Gain {getSortIndicator('PastGain')}
+      <div className="yahoo-finance-table-wrapper">
+        <div className="flex font-bold border-b border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white">
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 350px', minWidth: '200px' }}
+            onClick={createSortHandler('Name')}
+          >
+            Name {getSortIndicator('Name')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 110px', minWidth: '70px' }}
+            onClick={createSortHandler('Security.regularMarketPrice')}
+          >
+            Price {getSortIndicator('Security.regularMarketPrice')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 80px', minWidth: '70px' }}
+            onClick={createSortHandler('Diff')}
+          >
+            Diff {getSortIndicator('Diff')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 80px', minWidth: '70px' }}
+            onClick={createSortHandler('NumberOfShares')}
+          >
+            Shares {getSortIndicator('NumberOfShares')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 120px', minWidth: '100px' }}
+            onClick={createSortHandler('MarketCost')}
+          >
+            Market Cost {getSortIndicator('MarketCost')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 130px', minWidth: '100px' }}
+            onClick={createSortHandler('MarketPrice')}
+          >
+            Market Price {getSortIndicator('MarketPrice')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 90px', minWidth: '90px' }}
+            onClick={createSortHandler('Gain')}
+          >
+            Gain {getSortIndicator('Gain')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 90px', minWidth: '90px' }}
+            onClick={createSortHandler('GainPercent')}
+          >
+            Gain % {getSortIndicator('GainPercent')}
+          </div>
+          <div
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-2 py-1"
+            style={{ flex: '0 0 120px', minWidth: '100px' }}
+            onClick={createSortHandler('PastGain')}
+          >
+            Past Gain {getSortIndicator('PastGain')}
+          </div>
         </div>
       </div>
-      <List
-        className="react-window-list"
-        rowComponent={RowComponent}
-        rowCount={portfolio.length}
-        rowHeight={32}
-        height={600}
-        rowProps={{ portfolio, displayInEUR }}
-      />
+      <div className="yahoo-finance-table-wrapper">
+        <List
+          className="react-window-list"
+          rowComponent={RowComponent}
+          rowCount={portfolio.length}
+          rowHeight={32}
+          height={600}
+          rowProps={{ portfolio, displayInEUR }}
+        />
+      </div>
     </div>
   );
 };
